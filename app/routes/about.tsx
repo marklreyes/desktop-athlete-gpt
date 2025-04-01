@@ -28,7 +28,7 @@ export default function About() {
             About The Creator
           </h1>
           <div className="w-full h-2 bg-[#000000] mt-4 mb-2 relative">
-            <div className="absolute left-0 top-0 w-1/3 h-2 bg-[#00FF00]"></div>
+            <div className="absolute left-0 top-0 w-1/3 h-2 bg-[#B4D0D1]"></div>
           </div>
         </div>
 
@@ -38,45 +38,37 @@ export default function About() {
           <div className="flex flex-col md:flex-row gap-6 mb-12">
             {/* 8-bit avatar placeholder */}
             <div className={`w-32 h-32 md:w-48 md:h-48 border-4 border-[${theme.accent}] bg-white self-center md:self-start`}>
-              <div className="h-full w-full grid grid-cols-8 grid-rows-8">
-                {/* Placeholder for pixel art avatar - will be replaced with actual image */}
-                {Array(64).fill(0).map((_, i) => (
-                  <div
-                    key={i}
-                    className={`${
-                      [12, 13, 20, 21, 28, 29, 36, 37].includes(i) ? 'bg-black' :
-                      [18, 19, 22, 23, 26, 27, 34, 35].includes(i) ? 'bg-[#01F1FC]' : 'bg-white'
-                    }`}
-                  ></div>
-                ))}
-              </div>
+						<img
+							src="/desktopathlete-author.jpg"
+							alt="Mark L. Reyes, Author of Desktop Athlete"
+							className="h-full w-full object-contain"
+						/>
             </div>
 
             {/* Bio info */}
             <div className="flex-1">
               <h2 className={`text-2xl font-bold text-[${theme.secondary}] mb-4 uppercase tracking-wider`}>
-                Developer Name
+                Mark L. Reyes
               </h2>
               <div className={`mb-4 p-4 border-2 border-[${theme.accent}] bg-white text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)]`}>
                 <p className="mb-3">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum at lacus consectetur, sagittis nisi vel,
-                  viverra nisi. Aliquam erat volutpat. Praesent malesuada urna nisi, quis volutpat erat hendrerit non.
+				Hi, I'm Mark, Frontend Engineer with 18 years working with Engineering, Product, Creative & Marketing Teams.
                 </p>
                 <p>
-                  Phasellus eget enim eu lectus faucibus vestibulum. Suspendisse sodales pellentesque elementum.
+				Described by past teammates as a <em>quick study</em>, I'm a frontend software engineer that's in depth with the presentation layer of your web experience. I also side quest on the mic & advocate for what's important.
                 </p>
               </div>
 
               {/* Social links with 8-bit icons */}
               <div className="flex gap-4">
-                <a href="#" className={`inline-block border-2 border-[${theme.accent}] p-2 bg-white hover:translate-y-1 transition-transform`}>
+                <a href="https://github.com/marklreyes" title="Check out Mark L. Reyes on GitHub" className={`inline-block border-2 border-[${theme.accent}] p-2 bg-white hover:translate-y-1 transition-transform`}>
                   <span className="font-bold text-black">GitHub</span>
                 </a>
-                <a href="#" className={`inline-block border-2 border-[${theme.accent}] p-2 bg-white hover:translate-y-1 transition-transform`}>
-                  <span className="font-bold text-black">Twitter</span>
-                </a>
-                <a href="#" className={`inline-block border-2 border-[${theme.accent}] p-2 bg-white hover:translate-y-1 transition-transform`}>
+                <a href="https://www.linkedin.com/in/marklreyes" title="Check out Mark L. Reyes on LinkedIn" className={`inline-block border-2 border-[${theme.accent}] p-2 bg-white hover:translate-y-1 transition-transform`}>
                   <span className="font-bold text-black">LinkedIn</span>
+                </a>
+								<a href="https://strava.app.link/rTPVMJOEdSb" title="Check out Mark L. Reyes on Strava" className={`inline-block border-2 border-[${theme.accent}] p-2 bg-white hover:translate-y-1 transition-transform`}>
+                  <span className="font-bold text-black">Strava</span>
                 </a>
               </div>
             </div>
@@ -85,10 +77,10 @@ export default function About() {
           {/* Skills section */}
           <div className="mb-12">
             <h2 className={`text-2xl font-bold text-[${theme.secondary}] mb-4 uppercase tracking-wider inline-block border-b-4 border-[${theme.accent}]`}>
-              Skills & Technologies
+              Skills & Tech
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-              {["JavaScript", "TypeScript", "React", "Node.js", "Tailwind CSS", "AI", "UX Design", "Fitness"].map((skill) => (
+              {["TypeScript", "Netlify", "React Router", "Node.js", "Tailwind CSS", "OpenAI", "UX Design", "Fitness"].map((skill) => (
                 <div
                   key={skill}
                   className={`p-2 border-2 border-[${theme.accent}] bg-white text-black text-center
@@ -107,12 +99,13 @@ export default function About() {
             </h2>
             <div className={`p-4 border-2 border-[${theme.accent}] bg-white text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)]`}>
               <p className="mb-3">
-                Desktop Athlete was created to help people incorporate fitness into their busy lives.
-                The idea came from [your inspiration story here].
+                Desktop Athlete was created in the throes of a hardship we all shared, lockdown due to COVID-19. Since gyms, public parks and beaches were essentially off limits in my area, this portion of my <em>multiverse</em> came about as a way for me to keep sane during such difficult times. I held onto this idea even after <em>the blip</em> ended because I felt compelled to turn this negative into a positive.
               </p>
+              <p className="mb-3">
+			  	This AI Assistant is designed to help people incorporate fitness into their busy lives. The suggestions procured are done by me and is essentially a compiled list of YouTube workouts that I've done multiple times over (and still continue to do so). Don't believe me? Add me on Strava.
+			  </p>
               <p>
-                The application combines modern AI technology with practical fitness knowledge to create
-                accessible workouts that anyone can do, anywhere.
+                Combined with modern AI technology provided by OpenAI, my hope is to provide practical fitness knowledge to create accessible workouts that anyone can do, anywhere. As I discover more workouts that I feel are worthy of being added to the list, I will update the app. I also plan to add more features in the future, so stay tuned!
               </p>
             </div>
           </div>
@@ -122,27 +115,34 @@ export default function About() {
             <h2 className={`text-2xl font-bold text-[${theme.secondary}] mb-4 uppercase tracking-wider inline-block border-b-4 border-[${theme.accent}]`}>
               Get In Touch
             </h2>
-            <div className={`p-4 border-2 border-[${theme.accent}] bg-white text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)]`}>
-              <p className="mb-3">
+            <div className={`p-4 border-2 border-[${theme.accent}] bg-white`}>
+              <p className="mb-3 text-black">
                 Have questions, suggestions, or just want to say hello?
               </p>
-              <p className="mb-4">
-                Reach out at: <span className="font-bold">contact@example.com</span>
+              <p className="mb-3 text-black">
+                Reach out at: <span className="font-bold">mr@marklreyes.com</span>
               </p>
 
               <Link
                 to="/chat"
-                className={`inline-block px-6 py-3 border-4
-                  border-black
-                  bg-[${theme.secondary}]
-                  text-black
-                  font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
-                  hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]
-                  active:translate-x-[4px] active:translate-y-[4px] active:shadow-none
-                  transition-all`}
-              >
-                Try Desktop Athlete Now!
+								onClick={() => {
+									const audio = new Audio('/retro-8bit-music-logo-ni-sound-1-00-04.mp3');
+									audio.volume = 0.1; // Set volume to 10% (adjust this value between 0-1)
+									audio.play();
+								}}
+								className={`inline-block text-center px-4 py-2 border-4
+									border-[${theme.primary}]
+									bg-[${theme.primary}]
+									text-[${theme.secondary}]
+									font-bold shadow-[4px_4px_0px_0px]
+									shadow-[${theme.secondary}]
+									hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px]
+									active:translate-x-[4px] active:translate-y-[4px] active:shadow-none
+									transition-all`}
+								>
+									Try Desktop Athlete Now!
               </Link>
+
             </div>
           </div>
         </div>
