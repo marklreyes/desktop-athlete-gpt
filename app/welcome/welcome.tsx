@@ -7,7 +7,7 @@ export function Welcome() {
 	const { isDarkMode, theme } = useTheme();
   const [displayText, setDisplayText] = useState("");
   const indexRef = useRef(0);
-  const fullText = "Free exercise programs for the everyday Desktop Athlete!";
+  const fullText = "Get FREE exercise programs dedicated to YOU...the everyday Desktop Athlete!";
 
   useEffect(() => {
 	// Reset state and index
@@ -61,7 +61,7 @@ export function Welcome() {
 						to="/chat"
 						onClick={() => {
 							const audio = new Audio('/retro-8bit-music-logo-ni-sound-1-00-04.mp3');
-							audio.volume = 0.8; // Set volume to 30% (adjust this value between 0-1)
+							audio.volume = 0.1; // Set volume to 10% (adjust this value between 0-1)
 							audio.play();
 						}}
 						className={`block text-center px-4 py-2 border-4
