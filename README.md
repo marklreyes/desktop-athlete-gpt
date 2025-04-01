@@ -47,7 +47,7 @@ npm run build
 To preview a production build locally, use the [Netlify CLI](https://cli.netlify.com):
 
 ```bash
-npx netlify-cli serve
+npx netlify-cli dev
 ```
 
 ```bash

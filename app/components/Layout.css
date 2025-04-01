@@ -1,0 +1,15 @@
+@keyframes pixelate {
+	0% { background-position: 0 0; }
+	100% { background-position: 16px 16px; }
+}
+.pixelated-bg::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-image: linear-gradient(to bottom, transparent 50%, rgba(255,255,255,0.1) 50%);
+	background-size: 8px 8px;
+	animation: pixelate 4s linear infinite;
+}

@@ -1,6 +1,23 @@
 [build]
 command = "react-router build"
 publish = "build/client"
+functions = "netlify/functions"
+
+[functions]
+node_bundler = "esbuild"
+
+[functions.fetch-openai]
+memory_size = 1024
+timeout = 30
 
 [dev]
 command = "react-router dev"
+functions = "netlify/functions"
+publish = "public"
+port = 8888
+
+[[redirects]]
+from = "/functions/*"
+to = "/functions/:splat"
+status = 200
+force = true
