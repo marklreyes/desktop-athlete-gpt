@@ -73,13 +73,13 @@ export default function Chat() {
 	// Add this useEffect after your existing useEffect hooks
 	useEffect(() => {
 		// Clear localStorage on component mount (when user enters the route)
-		console.log("Chat component mounted: Clearing localStorage items");
+		// console.log("Chat component mounted: Clearing localStorage items");
 		localStorage.removeItem("chat-run-id");
 		localStorage.removeItem("chat-thread-id");
 
 		// Return a cleanup function to run when the component unmounts
 		return () => {
-		console.log("Chat component unmounted: Clearing localStorage items");
+		// console.log("Chat component unmounted: Clearing localStorage items");
 			localStorage.removeItem("chat-run-id");
 			localStorage.removeItem("chat-thread-id");
 		};
@@ -87,6 +87,9 @@ export default function Chat() {
 
 	// Update the useEffect for audio with looping functionality
 	useEffect(() => {
+		// Check if we've already attempted to play audio during this session
+		const hasAttemptedPlay = sessionStorage.getItem('audio-attempted');
+
 		// Create the audio element early so we can reference it later
 		const audio = new Audio('/pixel-playground-color-parade-main-version-25382-01-43.mp3');
 		audio.volume = 0.1;
@@ -94,41 +97,72 @@ export default function Chat() {
 
 		// Add event listener for when the audio ends to restart it
 		const handleAudioEnd = () => {
-		console.log("Audio track ended, restarting...");
-		if (audioRef.current) {
+		  if (audioRef.current) {
 			audioRef.current.currentTime = 0; // Reset to beginning
 			audioRef.current.play().catch(error => {
-			console.error("Error replaying audio:", error);
+			  console.error("Error replaying audio:", error);
 			});
-		}
+		  }
+		};
+
+		// Make sure audio is ready before attempting to play
+		const handleCanPlayThrough = () => {
+		  // Set a timeout to play the music after 5 seconds
+		  const audioTimer = setTimeout(() => {
+			try {
+			  // Play the audio and handle potential autoplay policy errors
+			  audio.play()
+				.then(() => {
+				  // Mark that we've successfully played audio this session
+				  sessionStorage.setItem('audio-attempted', 'true');
+				})
+				.catch(error => {
+				  console.error("Error playing audio:", error);
+				  // Set up a one-time click handler to play on user interaction
+				  const playOnInteraction = () => {
+					audio.play().catch(e => console.error("Error playing on interaction:", e));
+					document.removeEventListener('click', playOnInteraction);
+				  };
+				  document.addEventListener('click', playOnInteraction);
+				});
+			} catch (error) {
+			  console.error("Error playing audio:", error);
+			}
+		  }, hasAttemptedPlay ? 5000 : 5000); // Quicker restart after refresh
+
+		  // Remove this event listener since we only need it once
+		  audio.removeEventListener('canplaythrough', handleCanPlayThrough);
+
+		  return audioTimer;
 		};
 
 		// Add the ended event listener to create a loop
 		audio.addEventListener('ended', handleAudioEnd);
 
-		// Set a timeout to play the music after 5 seconds
-		const audioTimer = setTimeout(() => {
-		try {
-			// Play the audio and handle potential autoplay policy errors
-			audio.play().catch(error => {
-			console.error("Error playing audio:", error);
-			});
-		} catch (error) {
-			console.error("Error playing audio:", error);
-		}
-		}, 5000);
+		// Wait until audio can play through before attempting to play
+		let audioTimer;
+		audio.addEventListener('canplaythrough', handleCanPlayThrough);
+
+		// Preload the audio file
+		audio.load();
 
 		// Clean up function that runs when component unmounts
 		return () => {
-		clearTimeout(audioTimer);
-		if (audioRef.current) {
-			// Remove the event listener to prevent memory leaks
+		  if (audioTimer) clearTimeout(audioTimer);
+		  if (audioRef.current) {
 			audioRef.current.removeEventListener('ended', handleAudioEnd);
+			audioRef.current.removeEventListener('canplaythrough', handleCanPlayThrough);
 			audioRef.current.pause();
-			audioRef.current.currentTime = 0; // Reset position
-		}
+			audioRef.current.currentTime = 0;
+		  }
 		};
-	}, []);
+	  }, []);
+
+	function powerUp() {
+		const audio = new Audio('/retro-game-coin-pickup-jam-fx-1-00-03.mp3');
+		audio.volume = 1; // Set volume to 10% (adjust this value between 0-1)
+		audio.play();
+	}
 
 	// Create a message
 	async function createMessage(threadId: string, sanitizedMessage: string) {
@@ -163,7 +197,7 @@ export default function Chat() {
 	// and the runId is not set
 	async function runThread(threadId: string) {
 		try {
-			console.log("Running thread with assistantId:", import.meta.env.VITE_ASSISTANT_ID);
+			// console.log("Running thread with assistantId:", import.meta.env.VITE_ASSISTANT_ID);
 
 			const runThreadResponse = await fetch(
 				`/.netlify/functions/run-thread?threadId=${threadId}&asstID=${import.meta.env.VITE_ASSISTANT_ID}`
@@ -179,7 +213,7 @@ export default function Chat() {
 			// Try parsing the response before returning
 			try {
 				const responseData = await runThreadResponse.json();
-				console.log("Run thread response:", responseData);
+				// console.log("Run thread response:", responseData);
 
 				// Clone the response since we've already consumed it with .json()
 				const clonedResponse = new Response(JSON.stringify(responseData), {
@@ -208,7 +242,7 @@ export default function Chat() {
 	// with the chat
 	async function listMessages(threadId: string) {
 		try {
-			console.log("Listing messages for thread:", threadId);
+			// console.log("Listing messages for thread:", threadId);
 
 			// Add a cache-busting parameter
 			const timestamp = new Date().getTime();
@@ -223,7 +257,7 @@ export default function Chat() {
 			}
 
 			const data = await listMessagesResponse.json();
-			console.log("Raw message data received:", data);
+			// console.log("Raw message data received:", data);
 
 			if (!data.messages || !Array.isArray(data.messages)) {
 				console.error("Invalid message format received:", data);
@@ -252,7 +286,7 @@ export default function Chat() {
 	// and the runId is not set
 	async function retrieveRun(threadId: string, runId: string) {
 		try {
-			console.log(`Retrieving run status for thread=${threadId}, run=${runId}`);
+			// console.log(`Retrieving run status for thread=${threadId}, run=${runId}`);
 			const retrieveRunResponse = await fetch(
 				`/.netlify/functions/retrieve-run?thread=${threadId}&run=${runId}`
 			);
@@ -297,7 +331,7 @@ export default function Chat() {
 
 			// Create a thread if it doesn't exist (Default experience)
 			if (!effectiveThreadId) {
-				console.log("No thread found. Creating a new thread...");
+				// console.log("No thread found. Creating a new thread...");
 
 				const createThreadResponse = await fetch("/.netlify/functions/create-thread", {
 					method: "POST",
@@ -312,7 +346,7 @@ export default function Chat() {
 				}
 
 				const threadData = await createThreadResponse.json();
-				console.log("Create Thread API Response:", threadData);
+				// console.log("Create Thread API Response:", threadData);
 
 				if (!threadData.id) {
 					console.error("Thread creation failed: No thread_id returned from API");
@@ -325,13 +359,13 @@ export default function Chat() {
 				if (effectiveThreadId) {
 					localStorage.setItem("chat-thread-id", effectiveThreadId);
 				}
-				console.log("Thread created successfully:", effectiveThreadId);
+				// console.log("Thread created successfully:", effectiveThreadId);
 
 				// Create a message with the newly created threadId
 				await createMessage(threadData.id, sanitizedMessage);
 			} else {
 				// Returning experience - use existing threadId
-				console.log("Using existing thread:", effectiveThreadId);
+				// console.log("Using existing thread:", effectiveThreadId);
 				if (effectiveThreadId) {
 					await createMessage(effectiveThreadId, sanitizedMessage);
 				} else {
@@ -340,7 +374,7 @@ export default function Chat() {
 			 }
 
 			// Create the initial run
-			console.log("Creating a new run with thread ID:", effectiveThreadId);
+			// console.log("Creating a new run with thread ID:", effectiveThreadId);
 			// Check that effectiveThreadId is not null before calling runThread
 			if (!effectiveThreadId) {
 				throw new Error("Thread ID is unexpectedly null");
@@ -358,7 +392,7 @@ export default function Chat() {
 
 			setRunId(currentRunId);
 			localStorage.setItem("chat-run-id", currentRunId);
-			console.log("Run created successfully:", currentRunId);
+			// console.log("Run created successfully:", currentRunId);
 
 			// Now poll for the run to complete
 			let pollingAttempts = 0;
@@ -370,7 +404,7 @@ export default function Chat() {
 			// TODO: Polling an existing run id when it is expired"" leads to issues, refactor polling or use streaming for revisited UX experience
 			// PATCH - For now, we will just create a new run.
 			while (pollingAttempts < MAX_POLLING_ATTEMPTS) {
-				console.log(`Polling attempt ${pollingAttempts + 1}/${MAX_POLLING_ATTEMPTS} for run ${currentRunId}`);
+				// console.log(`Polling attempt ${pollingAttempts + 1}/${MAX_POLLING_ATTEMPTS} for run ${currentRunId}`);
 
 				try {
 					// Add null checks before calling retrieveRun
@@ -386,11 +420,11 @@ export default function Chat() {
 					}
 
 					runStatus = currentRun.status;
-					console.log("Run status:", runStatus);
+					// console.log("Run status:", runStatus);
 
 					// If run completed successfully, break out of the loop
 					if (runStatus === "completed") {
-						console.log("Run completed successfully!");
+						// console.log("Run completed successfully!");
 						break;
 					}
 
@@ -400,7 +434,7 @@ export default function Chat() {
 							throw new Error(`Maximum run retries (${MAX_RUN_RETRIES}) exceeded`);
 						}
 
-						console.log(`Run ${runStatus}. Treating as new interaction with existing thread.`);
+						// console.log(`Run ${runStatus}. Treating as new interaction with existing thread.`);
 						runRetryCount++;
 
 						// Clear the existing runId from state and localStorage
@@ -408,14 +442,14 @@ export default function Chat() {
 						localStorage.removeItem("chat-run-id");
 
 						// Create a completely fresh run for the existing thread
-						console.log("Creating a fresh run for existing thread:", effectiveThreadId);
+						// console.log("Creating a fresh run for existing thread:", effectiveThreadId);
 						const freshRunResponse = await runThread(effectiveThreadId);
 						if (!freshRunResponse) {
 							throw new Error(`Failed to create fresh run after ${runStatus} status`);
 						}
 
 						const freshRunData = await freshRunResponse.json();
-						console.log("Fresh run response data:", JSON.stringify(freshRunData, null, 2));
+						// console.log("Fresh run response data:", JSON.stringify(freshRunData, null, 2));
 
 						// Reset currentRunId and extract it correctly from the response
 						currentRunId = null; // Reset to ensure we don't reuse the expired ID
@@ -423,13 +457,13 @@ export default function Chat() {
 						// Check all possible locations of the run_id in the response
 						if (freshRunData.id) {
 							currentRunId = freshRunData.id;
-							console.log("Found run_id as 'id':", currentRunId);
+							// console.log("Found run_id as 'id':", currentRunId);
 						} else if (freshRunData.run_id) {
 							currentRunId = freshRunData.run_id;
-							console.log("Found run_id as 'run_id':", currentRunId);
+							// console.log("Found run_id as 'run_id':", currentRunId);
 						} else if (freshRunData.run?.id) {
 							currentRunId = freshRunData.run.id;
-							console.log("Found run_id in nested object 'run.id':", currentRunId);
+							// console.log("Found run_id in nested object 'run.id':", currentRunId);
 						}
 
 						if (!currentRunId) {
@@ -440,7 +474,7 @@ export default function Chat() {
 						// Update state and localStorage with the new run ID
 						setRunId(currentRunId);
 						localStorage.setItem("chat-run-id", currentRunId);
-						console.log("Fresh run created successfully:", currentRunId);
+						// console.log("Fresh run created successfully:", currentRunId);
 
 						// Reset status to queued since we're starting with a fresh run
 						runStatus = "queued";
@@ -465,15 +499,15 @@ export default function Chat() {
 			}
 
 			// Get messages from the thread
-			console.log("Fetching messages from completed run");
+			// console.log("Fetching messages from completed run");
 			if (!effectiveThreadId) {
 				throw new Error("Thread ID is unexpectedly null");
 			}
 			const messagesData = await listMessages(effectiveThreadId);
 
 			if (messagesData && Array.isArray(messagesData)) {
-				console.log("Messages received:", messagesData.length);
-				console.log("Full message data:", JSON.stringify(messagesData, null, 2));
+				// console.log("Messages received:", messagesData.length);
+				// console.log("Full message data:", JSON.stringify(messagesData, null, 2));
 				setMessages(messagesData);
 			} else {
 				throw new Error("Failed to fetch messages or invalid message format");
@@ -504,7 +538,7 @@ export default function Chat() {
       >
         {/* Assistant's Latest Response with 8-bit styling */}
         <div
-          className="flex items-start gap-3 max-h-[calc(100vh-12rem)]"
+          className="flex items-start gap-3"
           role="log"
           aria-label="Assistant's latest response"
         >
@@ -553,16 +587,59 @@ export default function Chat() {
               {/* Message content */}
               {(() => {
                 const assistantMessages = messages.filter((message) => message.role === "assistant");
-                console.log("All assistant messages:", assistantMessages);
+                // console.log("All assistant messages:", assistantMessages);
 
                 const latestAssistantMessage = assistantMessages[0]; // Get the last assistant message
-                console.log("Latest assistant message:", latestAssistantMessage);
+                // console.log("Latest assistant message:", latestAssistantMessage);
+
+				// Show loading animation when sending a message
+				if (isLoading) {
+				  return (
+					<div className="flex flex-col items-center justify-center py-6">
+					  {/* 8-bit hourglass animation */}
+					  <div className="w-12 h-12 relative animate-pulse">
+						<div className="absolute inset-0 grid grid-cols-6 grid-rows-6">
+						  {/* Top of hourglass */}
+						  <div className="col-span-6 bg-[#331C40]"></div>
+						  <div className="bg-[#331C40]"></div>
+						  <div className="bg-[#f39416]"></div>
+						  <div className="bg-[#f39416]"></div>
+						  <div className="bg-[#f39416]"></div>
+						  <div className="bg-[#331C40]"></div>
+						  <div className="bg-[#331C40]"></div>
+						  <div className="bg-[#f39416]"></div>
+						  <div className="bg-[#f39416]"></div>
+						  <div className="bg-[#f39416]"></div>
+						  <div className="bg-[#331C40]"></div>
+
+						  {/* Middle connector */}
+						  <div className="col-start-3 col-span-2 bg-[#331C40]"></div>
+
+						  {/* Bottom of hourglass - flipped for animation */}
+						  <div className="bg-[#331C40]"></div>
+						  <div className="bg-[#f39416] animate-sand"></div>
+						  <div className="bg-[#f39416] animate-sand"></div>
+						  <div className="bg-[#f39416] animate-sand"></div>
+						  <div className="bg-[#331C40]"></div>
+						  <div className="bg-[#331C40]"></div>
+						  <div className="bg-[#f39416]"></div>
+						  <div className="bg-[#f39416]"></div>
+						  <div className="bg-[#f39416]"></div>
+						  <div className="bg-[#331C40]"></div>
+						  <div className="col-span-6 bg-[#331C40]"></div>
+						</div>
+					  </div>
+
+					  <p className="mt-4 text-white text-center">Working on your workout...</p>
+					</div>
+				  );
+				}
 
                 if (latestAssistantMessage) {
                   try {
                     // First try to parse as JSON
                     const parsedContent = JSON.parse(latestAssistantMessage.content);
-                    console.log("Parsed content:", parsedContent);
+                    // console.log("Parsed content:", parsedContent);
 
                     if (Array.isArray(parsedContent) && parsedContent[0]?.text?.value) {
                       return (
@@ -595,12 +672,12 @@ export default function Chat() {
                     return <p className="text-red-500">Unable to display message: Unknown format</p>;
                   } catch (error) {
                     // Not JSON, treat as plain text/markdown
-                    console.log("Using direct content (not JSON)");
+                    // console.log("Using direct content (not JSON)");
                     return <ReactMarkdown>{latestAssistantMessage.content}</ReactMarkdown>;
                   }
                 }
 
-                return <p className="text-gray-500">
+                return <p className="text-black">
                   Hi, I'm Desktop Athlete, your AI guide for free 20+ minute workouts. No weights or equipment required. Just your mat, water bottle, and a towel.
                   <br />
                   <br />
@@ -632,6 +709,7 @@ export default function Chat() {
               onChange={(e) => setInputMessage(e.target.value)}
               onKeyPress={(e) => {
                 if (e.key === "Enter" && !isLoading) {
+				  powerUp();
                   handleSendMessage(inputMessage);
                   setInputMessage(""); // Clear input after sending
                 }
@@ -648,6 +726,7 @@ export default function Chat() {
             />
             <button
               onClick={() => {
+				powerUp();
                 handleSendMessage(inputMessage);
                 setInputMessage(""); // Clear input after sending
               }}
