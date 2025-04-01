@@ -16,6 +16,11 @@ export function meta({}: Route.MetaArgs) {
 export default function About() {
   const { theme } = useTheme();
 
+  // Calculate years of experience dynamically based on current year
+  const startYear = 2007;
+  const currentYear = new Date().getFullYear();
+  const yearsOfExperience = currentYear - startYear;
+
   return (
     <div
       className="flex flex-col items-center px-4 py-8"
@@ -52,22 +57,25 @@ export default function About() {
               </h2>
               <div className={`mb-4 p-4 border-2 border-[${theme.accent}] bg-white text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)]`}>
                 <p className="mb-3">
-				Hi, I'm Mark, Frontend Engineer with 18 years working with Engineering, Product, Creative & Marketing Teams.
+									Hi, I'm Mark, Frontend Engineer with {yearsOfExperience} years working with Engineering, Product, Creative & Marketing Teams.
                 </p>
                 <p>
-				Described by past teammates as a <em>quick study</em>, I'm a frontend software engineer that's in depth with the presentation layer of your web experience. I also side quest on the mic & advocate for what's important.
+									Described by past teammates as a <em>quick study</em>, I'm a frontend software engineer that's in depth with the presentation layer of your web experience. I also side quest on the mic & advocate for what's important.
                 </p>
               </div>
 
               {/* Social links with 8-bit icons */}
-              <div className="flex gap-4">
-                <a href="https://github.com/marklreyes" title="Check out Mark L. Reyes on GitHub" className={`inline-block border-2 border-[${theme.accent}] p-2 bg-white hover:translate-y-1 transition-transform`}>
+              <div className="flex gap-2">
+							<a href="https://marklreyes.com" target="_blank" title="Check out Mark L. Reyes on his website" className={`inline-block border-2 border-[${theme.accent}] p-2 bg-white hover:translate-y-1 transition-transform`}>
+                  <span className="font-bold text-black">Website</span>
+                </a>
+                <a href="https://github.com/marklreyes" target="_blank" title="Check out Mark L. Reyes on GitHub" className={`inline-block border-2 border-[${theme.accent}] p-2 bg-white hover:translate-y-1 transition-transform`}>
                   <span className="font-bold text-black">GitHub</span>
                 </a>
-                <a href="https://www.linkedin.com/in/marklreyes" title="Check out Mark L. Reyes on LinkedIn" className={`inline-block border-2 border-[${theme.accent}] p-2 bg-white hover:translate-y-1 transition-transform`}>
+                <a href="https://www.linkedin.com/in/marklreyes" target="_blank" title="Check out Mark L. Reyes on LinkedIn" className={`inline-block border-2 border-[${theme.accent}] p-2 bg-white hover:translate-y-1 transition-transform`}>
                   <span className="font-bold text-black">LinkedIn</span>
                 </a>
-								<a href="https://strava.app.link/rTPVMJOEdSb" title="Check out Mark L. Reyes on Strava" className={`inline-block border-2 border-[${theme.accent}] p-2 bg-white hover:translate-y-1 transition-transform`}>
+								<a href="https://strava.app.link/rTPVMJOEdSb" target="_blank" title="Check out Mark L. Reyes on Strava" className={`inline-block border-2 border-[${theme.accent}] p-2 bg-white hover:translate-y-1 transition-transform`}>
                   <span className="font-bold text-black">Strava</span>
                 </a>
               </div>
@@ -99,13 +107,13 @@ export default function About() {
             </h2>
             <div className={`p-4 border-2 border-[${theme.accent}] bg-white text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)]`}>
               <p className="mb-3">
-                Desktop Athlete was created in the throes of a hardship we all shared, lockdown due to COVID-19. Since gyms, public parks and beaches were essentially off limits in my area, this portion of my <em>multiverse</em> came about as a way for me to keep sane during such difficult times. I held onto this idea even after <em>the blip</em> ended because I felt compelled to turn this negative into a positive.
+                Desktop Athlete was created in the throes of a hardship we all shared, lockdown due to COVID-19. Since gyms, public parks and beaches were essentially off limits in my area, this portion of the <em>multiverse</em> came about as a way for me to keep sane during such difficult times. I held onto this idea even after <em>the blip</em> ended because I felt compelled to turn a negative into a positive.
               </p>
               <p className="mb-3">
-			  	This AI Assistant is designed to help people incorporate fitness into their busy lives. The suggestions procured are done by me and is essentially a compiled list of YouTube workouts that I've done multiple times over (and still continue to do so). Don't believe me? Add me on Strava.
-			  </p>
+								This AI Assistant is designed to help people incorporate fitness into their busy lives. The suggestions were procured over a period of time by my wife (no days off), and is essentially a compiled list of YouTube workouts that I've done multiple times over (and still continue to do so). Follow me on Strava for more details.
+							</p>
               <p>
-                Combined with modern AI technology provided by OpenAI, my hope is to provide practical fitness knowledge to create accessible workouts that anyone can do, anywhere. As I discover more workouts that I feel are worthy of being added to the list, I will update the app. I also plan to add more features in the future, so stay tuned!
+                Combined with modern AI technology provided by OpenAI, my hope is to provide practical fitness knowledge to create accessible workouts that anyone can do, anytime, anywhere. As I discover more workouts that I feel are worthy of being added to the list, I will update the app. I also plan to add more features in the future, so stay tuned!
               </p>
             </div>
           </div>
@@ -117,7 +125,7 @@ export default function About() {
             </h2>
             <div className={`p-4 border-2 border-[${theme.accent}] bg-white`}>
               <p className="mb-3 text-black">
-                Have questions, suggestions, or just want to say hello?
+                Have questions, suggestions, issues or just want to say hello?
               </p>
               <p className="mb-3 text-black">
                 Reach out at: <span className="font-bold">mr@marklreyes.com</span>
@@ -142,7 +150,27 @@ export default function About() {
 								>
 									Try Desktop Athlete Now!
               </Link>
-
+							<div className="mt-4 flex justify-center md:justify-start">
+								<a
+									href="https://www.buymeacoffee.com/markreyes"
+									target="_blank"
+									className="block
+									border-[${theme.accent}]
+									text-[${theme.secondary}]
+									font-bold shadow-[4px_4px_0px_0px]
+									hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)]
+									active:translate-x-[4px] active:translate-y-[4px] active:shadow-none
+									transition-all"
+									rel="noopener noreferrer"
+									title="Support Desktop Athlete by buying Mark a coffee"
+								>
+									<img
+										src="https://cdn.buymeacoffee.com/buttons/v2/default-violet.png"
+										alt="Buy Me A Coffee"
+										className="h-12 w-auto max-w-[200px]"
+									/>
+								</a>
+							</div>
             </div>
           </div>
         </div>
