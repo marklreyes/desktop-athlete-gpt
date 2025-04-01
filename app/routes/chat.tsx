@@ -406,12 +406,16 @@ export default function Chat() {
 
   return (
     <div
-      className={`flex flex-col items-center justify-center min-h-screen ${theme.background}`}
-      role="main"
-      aria-label="Chat Interface"
+		className="flex flex-col justify-center items-center"
+		style={{ minHeight: 'calc(100vh - 57px - 157px)' }}
+		role="main"
+		aria-label="Chat Interface"
+		aria-live="polite"
+		aria-busy={isLoading}
+		aria-disabled={isLoading}
     >
       <div
-        className="flex flex-col space-y-4 w-full max-w-lg p-4"
+        className={`flex flex-col space-y-4 w-full max-w-lg p-4 border border-[${theme.accent}] ${theme.background}`}
         role="region"
         aria-label="Chat Container"
       >
@@ -445,7 +449,7 @@ export default function Chat() {
                   setInputMessage(""); // Clear input after sending
                 }
               }}
-              placeholder="Short on time today. What's my workout?"
+              placeholder="Suggest a 20 minute workout!"
               maxLength={MAX_MESSAGE_LENGTH}
               disabled={isLoading} // Only disable when isLoading is true
               className={`w-full text-black p-2 bg-white border focus:outline-none focus:ring-2 ${
