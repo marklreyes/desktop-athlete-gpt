@@ -618,7 +618,13 @@ export default function Chat() {
                         <ReactMarkdown
                           components={{
 							p: ({ children }) => (
-							  <p className={`text-gray-500`}>{children}</p>
+							  <p className={`text-gray-500 mb-2`}>{children}</p>
+							),
+							ol: ({ children }) => (
+								<ol className={`text-gray-500 mb-2`}>{children}</ol>
+							),
+							ul: ({ children }) => (
+								<ul className={`text-gray-500 mb-2`}>{children}</ul>
 							),
                             a: ({ href, children }) => (
                               <a
