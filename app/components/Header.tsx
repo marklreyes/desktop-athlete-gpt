@@ -1,5 +1,6 @@
 import { Link } from "react-router";
 import { useTheme } from "../context/ThemeContext";
+import { trackEvent } from "~/utils/trackEvent";
 
 export default function Header() {
     const { isDarkMode, toggleTheme, theme } = useTheme();
@@ -7,7 +8,18 @@ export default function Header() {
 	return (
         <header className={`flex flex-col items-center gap-9 p-4 bg-[${theme.primary}] border-b`}>
             <div className="w-full flex justify-between items-center">
-                <Link to="/" className={`block border-2 border-[${theme.secondary}] p-3`}>
+                <Link to="/"
+					onClick={() => {
+						// Track event for logo click
+						trackEvent("logo_click", {
+							params: {
+								event_category: "Navigation",
+								event_label: "Logo",
+								component: "Header Component"
+							},
+						});
+					}}
+					className={`block border-2 border-[${theme.secondary}] p-3`}>
                     {/* Visually hidden heading for screen readers */}
                     <h1 className="sr-only">Desktop Athlete</h1>
                     <img
@@ -25,7 +37,18 @@ export default function Header() {
                             type="checkbox"
                             className="sr-only peer"
                             checked={isDarkMode}
-                            onChange={toggleTheme}
+                            onChange={() => {
+								toggleTheme();
+								// Track event for theme toggle
+								trackEvent("theme_toggle", {
+									params: {
+										event_category: "User Interaction",
+										event_label: "Theme Toggle",
+										component: "Header Component",
+										isDarkMode: !isDarkMode,
+									},
+								})();
+							}}
                             aria-label="Toggle theme"
                         />
                         <div className={`

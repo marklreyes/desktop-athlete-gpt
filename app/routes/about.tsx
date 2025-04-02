@@ -1,6 +1,7 @@
 import type { Route } from "./+types/home";
 import { useTheme } from "../context/ThemeContext";
 import { Link } from "react-router";
+import { trackEvent } from "~/utils/trackEvent";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -66,17 +67,69 @@ export default function About() {
 
               {/* Social links with 8-bit icons */}
 							<div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-							<a href="https://marklreyes.com" target="_blank" title="Check out Mark L. Reyes on his website" className={`text-center border-2 border-[${theme.accent}] p-2 bg-white hover:translate-y-1 transition-transform`}>
-                  <span className="font-bold text-black">Website</span>
+							<a href="https://marklreyes.com"
+								target="_blank"
+								onClick={trackEvent("social_click", {
+										params: {
+											action: "Click",
+											event_category: "Navigation",
+											event_label: "Website",
+											platform: "Website",
+											link_type: "profile",
+											component: "About Screen"
+										}
+									})}
+								title="Check out Mark L. Reyes on his website"
+								className={`text-center border-2 border-[${theme.accent}] p-2 bg-white hover:translate-y-1 transition-transform`}>
+                	  <span className="font-bold text-black">Website</span>
                 </a>
-                <a href="https://github.com/marklreyes" target="_blank" title="Check out Mark L. Reyes on GitHub" className={`text-center border-2 border-[${theme.accent}] p-2 bg-white hover:translate-y-1 transition-transform`}>
-                  <span className="font-bold text-black">GitHub</span>
+                <a href="https://github.com/marklreyes"
+									target="_blank"
+									onClick={trackEvent("social_click", {
+										params: {
+											action: "Click",
+											event_category: "Navigation",
+											event_label: "GitHub",
+											platform: "GitHub",
+											link_type: "profile",
+											component: "About Screen"
+										}
+									})}
+									title="Check out Mark L. Reyes on GitHub"
+									className={`text-center border-2 border-[${theme.accent}] p-2 bg-white hover:translate-y-1 transition-transform`}>
+                  	<span className="font-bold text-black">GitHub</span>
                 </a>
-                <a href="https://www.linkedin.com/in/marklreyes" target="_blank" title="Check out Mark L. Reyes on LinkedIn" className={`text-center border-2 border-[${theme.accent}] p-2 bg-white hover:translate-y-1 transition-transform`}>
-                  <span className="font-bold text-black">LinkedIn</span>
+                <a href="https://www.linkedin.com/in/marklreyes"
+									target="_blank"
+									onClick={trackEvent("social_click", {
+										params: {
+											action: "Click",
+											event_category: "Navigation",
+											event_label: "LinkedIn",
+											platform: "LinkedIn",
+											link_type: "profile",
+											component: "About Screen"
+										}
+									})}
+									title="Check out Mark L. Reyes on LinkedIn"
+									className={`text-center border-2 border-[${theme.accent}] p-2 bg-white hover:translate-y-1 transition-transform`}>
+                  	<span className="font-bold text-black">LinkedIn</span>
                 </a>
-								<a href="https://strava.app.link/rTPVMJOEdSb" target="_blank" title="Check out Mark L. Reyes on Strava" className={`text-center border-2 border-[${theme.accent}] p-2 bg-white hover:translate-y-1 transition-transform`}>
-                  <span className="font-bold text-black">Strava</span>
+								<a href="https://strava.app.link/rTPVMJOEdSb"
+									target="_blank"
+									onClick={trackEvent("social_click", {
+										params: {
+											action: "Click",
+											event_category: "Navigation",
+											event_label: "Strava",
+											platform: "Strava",
+											link_type: "profile",
+											component: "About Screen"
+										}
+									})}
+									title="Check out Mark L. Reyes on Strava"
+									className={`text-center border-2 border-[${theme.accent}] p-2 bg-white hover:translate-y-1 transition-transform`}>
+                  	<span className="font-bold text-black">Strava</span>
                 </a>
               </div>
             </div>
@@ -134,6 +187,17 @@ export default function About() {
               <Link
                 to="/chat"
 								onClick={() => {
+									// Track the button click event
+									trackEvent('try_desktop_athlete_now_button', {
+										params: {
+											action: "Click",
+											event_category: "Navigation",
+											event_label: "Try Desktop Athlete Now!",
+											component: "About Screen",
+										},
+										audioSrc: "/retro-8bit-music-logo-ni-sound-1-00-04.mp3",
+										audioVolume: 0.1,
+									});
 									const audio = new Audio('/retro-8bit-music-logo-ni-sound-1-00-04.mp3');
 									audio.volume = 0.1; // Set volume to 10% (adjust this value between 0-1)
 									audio.play();
@@ -154,6 +218,13 @@ export default function About() {
 								<a
 									href="https://www.buymeacoffee.com/markreyes"
 									target="_blank"
+									onClick={trackEvent("social_click", {
+										params: {
+											platform: "Buy Me A Coffee",
+											link_type: "profile",
+											component: "About Screen"
+										}
+									})}
 									className="block
 									border-[${theme.accent}]
 									text-[${theme.secondary}]
