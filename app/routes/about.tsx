@@ -65,17 +65,17 @@ export default function About() {
               </div>
 
               {/* Social links with 8-bit icons */}
-              <div className="flex gap-2">
-							<a href="https://marklreyes.com" target="_blank" title="Check out Mark L. Reyes on his website" className={`inline-block border-2 border-[${theme.accent}] p-2 bg-white hover:translate-y-1 transition-transform`}>
+							<div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+							<a href="https://marklreyes.com" target="_blank" title="Check out Mark L. Reyes on his website" className={`text-center border-2 border-[${theme.accent}] p-2 bg-white hover:translate-y-1 transition-transform`}>
                   <span className="font-bold text-black">Website</span>
                 </a>
-                <a href="https://github.com/marklreyes" target="_blank" title="Check out Mark L. Reyes on GitHub" className={`inline-block border-2 border-[${theme.accent}] p-2 bg-white hover:translate-y-1 transition-transform`}>
+                <a href="https://github.com/marklreyes" target="_blank" title="Check out Mark L. Reyes on GitHub" className={`text-center border-2 border-[${theme.accent}] p-2 bg-white hover:translate-y-1 transition-transform`}>
                   <span className="font-bold text-black">GitHub</span>
                 </a>
-                <a href="https://www.linkedin.com/in/marklreyes" target="_blank" title="Check out Mark L. Reyes on LinkedIn" className={`inline-block border-2 border-[${theme.accent}] p-2 bg-white hover:translate-y-1 transition-transform`}>
+                <a href="https://www.linkedin.com/in/marklreyes" target="_blank" title="Check out Mark L. Reyes on LinkedIn" className={`text-center border-2 border-[${theme.accent}] p-2 bg-white hover:translate-y-1 transition-transform`}>
                   <span className="font-bold text-black">LinkedIn</span>
                 </a>
-								<a href="https://strava.app.link/rTPVMJOEdSb" target="_blank" title="Check out Mark L. Reyes on Strava" className={`inline-block border-2 border-[${theme.accent}] p-2 bg-white hover:translate-y-1 transition-transform`}>
+								<a href="https://strava.app.link/rTPVMJOEdSb" target="_blank" title="Check out Mark L. Reyes on Strava" className={`text-center border-2 border-[${theme.accent}] p-2 bg-white hover:translate-y-1 transition-transform`}>
                   <span className="font-bold text-black">Strava</span>
                 </a>
               </div>

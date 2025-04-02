@@ -33,19 +33,25 @@ const darkTheme = {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [isDarkMode, setIsDarkMode] = useState(false); // Default value for SSR
+  // Initialize with DARK mode as default (isDarkMode = true)
+  // We'll use a function for initial state to avoid running this logic twice
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    // During SSR, default to dark mode
+    if (typeof window === 'undefined') return true;
 
-  useEffect(() => {
-    // Run localStorage operations after mounting
-    const savedTheme = typeof window !== "undefined"
-      ? localStorage.getItem("theme")
-      : null;
+    // Check if user has a saved preference
+    const savedTheme = localStorage.getItem("theme");
 
+    // If there's a saved preference, use it
     if (savedTheme) {
-      setIsDarkMode(savedTheme === "dark");
+      return savedTheme === "dark";
     }
-  }, []);
 
+    // No saved preference, default to dark mode (not system preference)
+    return true;
+  });
+
+  // Toggle theme function remains the same
   const toggleTheme = () => {
     setIsDarkMode(prev => {
       const newTheme = !prev;
@@ -56,15 +62,14 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     });
   };
 
+  // This effect is simplified - we ONLY listen for system preference changes
+  // and only apply them if the user hasn't set a preference
   useEffect(() => {
     if (typeof window !== "undefined") {
       const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
-      if (!localStorage.getItem("theme")) {
-        setIsDarkMode(mediaQuery.matches);
-      }
-
       const handler = (e: MediaQueryListEvent) => {
+        // Only change theme based on system if no user preference exists
         if (!localStorage.getItem("theme")) {
           setIsDarkMode(e.matches);
         }
@@ -77,9 +82,9 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   const theme = isDarkMode ? darkTheme : lightTheme;
 
+  // Keep the CSS variables effect as is
   useEffect(() => {
     if (typeof document !== 'undefined') {
-      // Set CSS variables based on theme
       document.documentElement.style.setProperty('--theme-primary', theme.primary);
       document.documentElement.style.setProperty('--theme-secondary', theme.secondary);
       document.documentElement.style.setProperty('--theme-accent', theme.accent);
