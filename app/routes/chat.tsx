@@ -87,9 +87,6 @@ export default function Chat() {
 
 	// Update the useEffect for audio with looping functionality
 	useEffect(() => {
-		// Check if we've already attempted to play audio during this session
-		const hasAttemptedPlay = sessionStorage.getItem('audio-attempted');
-
 		// Create the audio element early so we can reference it later
 		const audio = new Audio('/pixel-playground-color-parade-main-version-25382-01-43.mp3');
 		audio.volume = 0.1;
@@ -97,66 +94,41 @@ export default function Chat() {
 
 		// Add event listener for when the audio ends to restart it
 		const handleAudioEnd = () => {
-		  if (audioRef.current) {
+		// console.log("Audio track ended, restarting...");
+		if (audioRef.current) {
 			audioRef.current.currentTime = 0; // Reset to beginning
 			audioRef.current.play().catch(error => {
-			  console.error("Error replaying audio:", error);
+			console.error("Error replaying audio:", error);
 			});
-		  }
-		};
-
-		// Make sure audio is ready before attempting to play
-		const handleCanPlayThrough = () => {
-		  // Set a timeout to play the music after 5 seconds
-		  const audioTimer = setTimeout(() => {
-			try {
-			  // Play the audio and handle potential autoplay policy errors
-			  audio.play()
-				.then(() => {
-				  // Mark that we've successfully played audio this session
-				  sessionStorage.setItem('audio-attempted', 'true');
-				})
-				.catch(error => {
-				  console.error("Error playing audio:", error);
-				  // Set up a one-time click handler to play on user interaction
-				  const playOnInteraction = () => {
-					audio.play().catch(e => console.error("Error playing on interaction:", e));
-					document.removeEventListener('click', playOnInteraction);
-				  };
-				  document.addEventListener('click', playOnInteraction);
-				});
-			} catch (error) {
-			  console.error("Error playing audio:", error);
-			}
-		  }, hasAttemptedPlay ? 5000 : 5000); // Quicker restart after refresh
-
-		  // Remove this event listener since we only need it once
-		  audio.removeEventListener('canplaythrough', handleCanPlayThrough);
-
-		  return audioTimer;
+		}
 		};
 
 		// Add the ended event listener to create a loop
 		audio.addEventListener('ended', handleAudioEnd);
 
-		// Wait until audio can play through before attempting to play
-		let audioTimer;
-		audio.addEventListener('canplaythrough', handleCanPlayThrough);
-
-		// Preload the audio file
-		audio.load();
+		// Set a timeout to play the music after 5 seconds
+		const audioTimer = setTimeout(() => {
+		try {
+			// Play the audio and handle potential autoplay policy errors
+			audio.play().catch(error => {
+			console.error("Error playing audio:", error);
+			});
+		} catch (error) {
+			console.error("Error playing audio:", error);
+		}
+		}, 5000);
 
 		// Clean up function that runs when component unmounts
 		return () => {
-		  if (audioTimer) clearTimeout(audioTimer);
-		  if (audioRef.current) {
+		clearTimeout(audioTimer);
+		if (audioRef.current) {
+			// Remove the event listener to prevent memory leaks
 			audioRef.current.removeEventListener('ended', handleAudioEnd);
-			audioRef.current.removeEventListener('canplaythrough', handleCanPlayThrough);
 			audioRef.current.pause();
-			audioRef.current.currentTime = 0;
-		  }
+			audioRef.current.currentTime = 0; // Reset position
+		}
 		};
-	  }, []);
+	}, []);
 
 	function powerUp() {
 		const audio = new Audio('/retro-game-coin-pickup-jam-fx-1-00-03.mp3');
