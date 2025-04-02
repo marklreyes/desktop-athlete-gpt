@@ -5,6 +5,7 @@ import { VisuallyHidden } from "../components/VisuallyHidden";
 import { sanitizeInput } from "~/utils/sanitizer";
 import type { Route } from "./+types/chat";
 import { useTheme } from "../context/ThemeContext";
+import { trackEvent } from "~/utils/trackEvent";
 
 interface Message {
   role: "user" | "assistant" | "system";
@@ -617,24 +618,63 @@ export default function Chat() {
                       return (
                         <ReactMarkdown
                           components={{
+							h1: ({ children }) => (
+								<h1 className={`text-black mb-2 text-2xl font-bold`}>{children}</h1>
+							),
+							h2: ({ children }) => (
+								<h2 className={`text-black mb-2 text-xl font-bold`}>{children}</h2>
+							),
+							h3: ({ children }) => (
+								<h3 className={`text-black mb-2 text-lg font-bold`}>{children}</h3>
+							),
+							h4: ({ children }) => (
+								<h4 className={`text-black mb-2 text-md font-bold`}>{children}</h4>
+							),
+							h5: ({ children }) => (
+								<h5 className={`text-black mb-2 text-sm font-bold`}>{children}</h5>
+							),
+							h6: ({ children }) => (
+								<h6 className={`text-black mb-2 text-xs font-bold`}>{children}</h6>
+							),
+							strong: ({ children }) => (
+								<strong className={`text-black mb-2 font-bold`}>{children}</strong>
+							),
+							em: ({ children }) => (
+								<em className={`text-black mb-2 italic`}>{children}</em>
+							),
 							p: ({ children }) => (
-							  <p className={`text-gray-500 mb-2`}>{children}</p>
+								<p className={`text-black mb-2`}>{children}</p>
 							),
 							ol: ({ children }) => (
-								<ol className={`text-gray-500 mb-2`}>{children}</ol>
+								<ol className={`text-black mb-2`}>{children}</ol>
 							),
 							ul: ({ children }) => (
-								<ul className={`text-gray-500 mb-2`}>{children}</ul>
+								<ul className={`text-black mb-2`}>{children}</ul>
 							),
                             a: ({ href, children }) => (
-                              <a
-                                href={href}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className={`text-[${theme.secondary}] underline hover:text-[${theme.secondary}]`}
-                              >
-                                {children}
-                              </a>
+								<a href={href}
+								onClick={trackEvent("chat_link_click", {
+									params: {
+										action: "Click",
+										action_at: new Date().toISOString(),
+										event_category: "Navigation",
+										event_label: "OpenAI Assistant Message Link",
+										platform: "OpenAI",
+										platform_category: "OpenAI Assistant Message",
+										platform_label: "OpenAI Assistant Message Link",
+										platform_href: href,
+										platform_text: children,
+										platform_title: "Desktop Athlete Workout",
+										link_type: "chat",
+										component: "Chat Markdown Component"
+									}
+								})}
+								target="_blank"
+								rel="noopener noreferrer"
+								className={`text-[${theme.secondary}] underline hover:text-[${theme.secondary}]`}
+								>
+									{children}
+								</a>
                             ),
                           }}
                         >
@@ -687,9 +727,22 @@ export default function Chat() {
               onChange={(e) => setInputMessage(e.target.value)}
               onKeyPress={(e) => {
                 if (e.key === "Enter" && !isLoading) {
-				  powerUp();
-                  handleSendMessage(inputMessage);
-                  setInputMessage(""); // Clear input after sending
+					powerUp();
+					handleSendMessage(inputMessage);
+					// Track the message send event with keyboard
+					trackEvent("send_message", {
+						params: {
+							action: "Submit",
+							action_at: new Date().toISOString(),
+							event_category: "Chat",
+							event_label: "Message Sent",
+							input_method: "keyboard",
+							message: inputMessage,
+							message_length: inputMessage.length,
+							component: "Chat Input"
+						}
+					})();
+					setInputMessage(""); // Clear input after sending
                 }
               }}
               placeholder="Suggest a 20 minute workout!"
@@ -706,6 +759,19 @@ export default function Chat() {
               onClick={() => {
 				powerUp();
                 handleSendMessage(inputMessage);
+				// Track the message send event with button click
+				trackEvent("send_message", {
+				params: {
+					action: "Submit",
+					action_at: new Date().toISOString(),
+					event_category: "Chat",
+					event_label: "Message Sent",
+					input_method: "button_click",
+					message: inputMessage,
+					message_length: inputMessage.length,
+					component: "Chat Button"
+				}
+				})();
                 setInputMessage(""); // Clear input after sending
               }}
               disabled={isLoading || !inputMessage.trim()} // Disable if isLoading or input is empty

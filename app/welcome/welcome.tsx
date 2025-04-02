@@ -2,6 +2,7 @@ import { Link } from "react-router";
 import { useEffect, useState, useRef } from "react";
 import { useTheme } from "../context/ThemeContext";
 import "./welcome.css";
+import { trackEvent } from "~/utils/trackEvent";
 
 export function Welcome() {
 	const { isDarkMode, theme } = useTheme();
@@ -60,6 +61,19 @@ export function Welcome() {
 					<Link
 						to="/chat"
 						onClick={() => {
+							// Track the button click event
+							trackEvent("press_any_button", {
+								params: {
+									action: "Click",
+									event_category: "Navigation",
+									event_label: "Press Any Button",
+									component: "Welcome Screen",
+								},
+								audioSrc: "/retro-8bit-music-logo-ni-sound-1-00-04.mp3",
+								audioVolume: 0.1,
+							});
+
+							// Play audio (existing functionality)
 							const audio = new Audio('/retro-8bit-music-logo-ni-sound-1-00-04.mp3');
 							audio.volume = 0.1; // Set volume to 10% (adjust this value between 0-1)
 							audio.play();
