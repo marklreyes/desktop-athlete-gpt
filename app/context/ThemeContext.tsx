@@ -14,18 +14,20 @@ type ThemeContextType = {
 
 const lightTheme = {
     background: "bg-[#f39416]", // 		Yellow-orange
-    text: "text-[#331C40]", // 		Dark purple
+    text: "text-[#FFFFFF]", // 		White
     primary: "#331C40", // 		Dark purple
     secondary: "#07EFFE", // 		Light blue
     accent: "#B4D0D1", // 		Light gray
+		rgba: "rgba(255, 255, 255, 0.5)", // 		White with opacity
 };
 
 const darkTheme = {
     background: "bg-[#331C40]", // Dark purple
     text: "text-[#FFFFFF]", // 		White
     primary: "#f39416", // 		Yellow-orange
-    secondary: "#07EFFE", // 		Light blue
+    secondary: "#01F1FC", // 		Light blue
     accent: "#B4D0D1", // 		Light gray
+		rgba: "rgba(0, 0, 0, 0.5)", // 		Black with opacity
 };
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -73,8 +75,21 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  const theme = isDarkMode ? darkTheme : lightTheme;
+
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      // Set CSS variables based on theme
+      document.documentElement.style.setProperty('--theme-primary', theme.primary);
+      document.documentElement.style.setProperty('--theme-secondary', theme.secondary);
+      document.documentElement.style.setProperty('--theme-accent', theme.accent);
+      document.documentElement.style.setProperty('--theme-background', theme.background);
+      document.documentElement.style.setProperty('--theme-rgba', theme.rgba);
+    }
+  }, [theme]);
+
   return (
-    <ThemeContext.Provider value={{ isDarkMode, toggleTheme, theme: isDarkMode ? darkTheme : lightTheme }}>
+    <ThemeContext.Provider value={{ isDarkMode, toggleTheme, theme }}>
       {children}
     </ThemeContext.Provider>
   );

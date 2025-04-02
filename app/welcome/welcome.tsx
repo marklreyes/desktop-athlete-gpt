@@ -7,7 +7,7 @@ export function Welcome() {
 	const { isDarkMode, theme } = useTheme();
   const [displayText, setDisplayText] = useState("");
   const indexRef = useRef(0);
-  const fullText = "Free exercise programs for the everyday Desktop Athlete!";
+  const fullText = "Get FREE exercise programs dedicated to YOU...the everyday Desktop Athlete!";
 
   useEffect(() => {
 	// Reset state and index
@@ -28,10 +28,13 @@ export function Welcome() {
   }, []);
 
   return (
-	  <div
-	    className="flex flex-col justify-center items-center"
-	    style={{ minHeight: 'calc(100vh - 57px - 157px)' }}
-	  >
+    <div
+		className="flex flex-col justify-center items-center"
+		style={{ minHeight: 'calc(100vh - 57px - 157px)' }}
+		role="main"
+		aria-label="Welcome to Desktop Athlete"
+		aria-live="polite"
+    >
 
 			<div className="max-w-lg w-full space-y-6 px-4 -mt-16">
 				<div className="relative h-40 m-0 overflow-hidden">
@@ -58,6 +61,7 @@ export function Welcome() {
 						to="/chat"
 						onClick={() => {
 							const audio = new Audio('/retro-8bit-music-logo-ni-sound-1-00-04.mp3');
+							audio.volume = 0.1; // Set volume to 10% (adjust this value between 0-1)
 							audio.play();
 						}}
 						className={`block text-center px-4 py-2 border-4

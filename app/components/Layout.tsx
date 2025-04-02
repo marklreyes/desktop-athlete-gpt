@@ -9,6 +9,8 @@ import Header from "./Header";
 import Footer from "./Footer";
 import { useTheme } from "../context/ThemeContext";
 import "./Layout.css";
+import { DefaultMeta } from "~/components/DefaultMeta";
+import GoogleAnalytics from "./GoogleAnalytics";
 
 export function Layout() {
 	const { isDarkMode, theme } = useTheme();
@@ -18,7 +20,9 @@ export function Layout() {
 		  <meta charSet="utf-8" />
 		  <meta name="viewport" content="width=device-width, initial-scale=1" />
 		  <Meta />
+		  <DefaultMeta />
 		  <Links />
+		  <GoogleAnalytics />
 		</head>
 		<body className={`${theme.background} ${theme.text} transition-colors duration-200 min-h-screen`}>
 		<Header />
