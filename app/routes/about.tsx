@@ -58,11 +58,14 @@ export default function About() {
               </h2>
               <div className={`mb-4 p-4 border-2 border-[${theme.accent}] bg-white text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)]`}>
                 <p className="mb-3">
-									Hi, I'm Mark, Frontend Engineer with {yearsOfExperience} years working with Engineering, Product, Creative & Marketing Teams.
+									Hi, I'm Mark, creator of Desktop Athlete. I'm a Frontend Engineer with {yearsOfExperience} years working with Engineering, Product, Creative & Marketing Teams.
                 </p>
-                <p>
-									Described by past teammates as a <em>quick study</em>, I'm a frontend software engineer that's in depth with the presentation layer of your web experience. I also side quest on the mic & advocate for what's important.
+                <p className="mb-3">
+									Described by past teammates as a <em>quick study</em>, I'm generally in the trenches of the presentation layer of your web experience. I also side quest on the mic & advocate for what's important.
                 </p>
+								<p>
+									I made this app to help busy people like you and me find workouts that fit into our daily grind. I believe that fitness should be accessible to everyone, and I hope this app helps you on your journey.
+								</p>
               </div>
 
               {/* Social links with 8-bit icons */}
@@ -135,6 +138,24 @@ export default function About() {
             </div>
           </div>
 
+          {/* Project Background */}
+          <div className="mb-12">
+            <h2 className={`text-2xl font-bold text-[${theme.secondary}] mb-4 uppercase tracking-wider inline-block border-b-4 border-[${theme.accent}]`}>
+              About Desktop Athlete
+            </h2>
+            <div className={`p-4 border-2 border-[${theme.accent}] bg-white text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)]`}>
+              <p className="mb-3">
+                Desktop Athlete was created in the throes of a hardship we all shared, lockdown due to COVID-19. Since gyms, public parks and beaches were essentially off limits in my area, this portion of the <em>multiverse</em> came about as a way for me to keep sane during such difficult times. I held onto this idea even after <em>the blip</em> ended because I felt compelled to turn a negative into a positive.
+              </p>
+              <p className="mb-3">
+								This AI Assistant is designed to help people incorporate fitness into their busy lives. The suggestions were procured over a period of time by my wife (no days off), and is essentially a compiled list of YouTube workouts that I've done multiple times over and still continue to do so to this day. Add me on Strava for more details.
+							</p>
+              <p>
+                Combined with modern AI technology provided by OpenAI, my hope is to provide practical fitness programs that anyone can do, anytime, anywhere. As I discover more workouts that I feel are worthy of being added to the list, I will update the app. I also plan to add more features in the future, so stay tuned!
+              </p>
+            </div>
+          </div>
+
           {/* Skills section */}
           <div className="mb-12">
             <h2 className={`text-2xl font-bold text-[${theme.secondary}] mb-4 uppercase tracking-wider inline-block border-b-4 border-[${theme.accent}]`}>
@@ -153,30 +174,12 @@ export default function About() {
             </div>
           </div>
 
-          {/* Project Background */}
-          <div className="mb-12">
-            <h2 className={`text-2xl font-bold text-[${theme.secondary}] mb-4 uppercase tracking-wider inline-block border-b-4 border-[${theme.accent}]`}>
-              About Desktop Athlete
-            </h2>
-            <div className={`p-4 border-2 border-[${theme.accent}] bg-white text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)]`}>
-              <p className="mb-3">
-                Desktop Athlete was created in the throes of a hardship we all shared, lockdown due to COVID-19. Since gyms, public parks and beaches were essentially off limits in my area, this portion of the <em>multiverse</em> came about as a way for me to keep sane during such difficult times. I held onto this idea even after <em>the blip</em> ended because I felt compelled to turn a negative into a positive.
-              </p>
-              <p className="mb-3">
-								This AI Assistant is designed to help people incorporate fitness into their busy lives. The suggestions were procured over a period of time by my wife (no days off), and is essentially a compiled list of YouTube workouts that I've done multiple times over (and still continue to do so). Follow me on Strava for more details.
-							</p>
-              <p>
-                Combined with modern AI technology provided by OpenAI, my hope is to provide practical fitness knowledge to create accessible workouts that anyone can do, anytime, anywhere. As I discover more workouts that I feel are worthy of being added to the list, I will update the app. I also plan to add more features in the future, so stay tuned!
-              </p>
-            </div>
-          </div>
-
           {/* Contact Section */}
           <div>
             <h2 className={`text-2xl font-bold text-[${theme.secondary}] mb-4 uppercase tracking-wider inline-block border-b-4 border-[${theme.accent}]`}>
               Get In Touch
             </h2>
-            <div className={`p-4 border-2 border-[${theme.accent}] bg-white`}>
+            <div className={`p-4 border-2 border-[${theme.accent}] bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)]`}>
               <p className="mb-3 text-black">
                 Have questions, suggestions, issues or just want to say hello?
               </p>
