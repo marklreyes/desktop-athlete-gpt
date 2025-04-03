@@ -10,8 +10,7 @@ export default function Footer() {
 				<div className="text-center">
 					<p>
 						<small>
-							Made with 👾 by
-							<Link to="/about"
+							Made with 👾 by <Link to="/about"
 							className="underline font-bold"
 							onClick={() => {
 								// Track event for text click
