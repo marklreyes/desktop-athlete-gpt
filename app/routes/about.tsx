@@ -148,11 +148,44 @@ export default function About() {
                 Desktop Athlete was created in the throes of a hardship we all shared, lockdown due to COVID-19. Since gyms, public parks and beaches were essentially off limits in my area, this portion of the <em>multiverse</em> came about as a way for me to keep sane during such difficult times. I held onto this idea even after <em>the blip</em> ended because I felt compelled to turn a negative into a positive.
               </p>
               <p className="mb-3">
-								This AI Assistant is designed to help people incorporate fitness into their busy lives. The suggestions were procured over a period of time by my wife (no days off), and is essentially a compiled list of YouTube workouts that I've done multiple times over and still continue to do so to this day. Add me on Strava for more details.
-							</p>
-              <p>
-                Combined with modern AI technology provided by OpenAI, my hope is to provide practical fitness programs that anyone can do, anytime, anywhere. As I discover more workouts that I feel are worthy of being added to the list, I will update the app. I also plan to add more features in the future, so stay tuned!
+					This AI Assistant is designed to help people incorporate fitness into their busy lives. The suggestions were procured over a period of time by my wife (no days off), and is essentially a compiled list of YouTube workouts that I've done multiple times over and still continue to do so to this day. Add me on Strava for more details.
+				</p>
+				<p className="mb-3">
+                Combined with modern AI technology provided by OpenAI, my hope is to provide practical fitness programs that anyone can do, anytime, anywhere. As I discover more workouts that I feel are worthy of being added to the list, I will update the app. I also plan to add more features in the future, so stay tuned.
               </p>
+			  <p className="mb-3">
+			  I'd be grateful for any additional cups of coffee in order to support this platform!
+			  </p>
+			  <div className="flex justify-center md:justify-start">
+				<a
+					href="https://www.buymeacoffee.com/markreyes"
+					target="_blank"
+					onClick={trackEvent("social_click", {
+						params: {
+							platform: "Buy Me A Coffee",
+							link_type: "profile",
+							component: "About Screen"
+						}
+					})}
+					className={`
+						block
+						border-[${theme.primary}]
+						bg-[#BD5FFF]
+						text-[${theme.secondary}]
+						font-bold shadow-[4px_4px_0px_0px]
+						hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px]
+						active:translate-x-[4px] active:translate-y-[4px] active:shadow-none
+						transition-all`}
+					rel="noopener noreferrer"
+					title="Support Desktop Athlete by buying Mark a coffee"
+				>
+					<img
+						src="https://cdn.buymeacoffee.com/buttons/v2/default-violet.png"
+						alt="Buy Me A Coffee"
+						className="h-12 w-auto max-w-[200px]"
+					/>
+				</a>
+			</div>
             </div>
           </div>
 
@@ -189,62 +222,34 @@ export default function About() {
 
               <Link
                 to="/chat"
-								onClick={() => {
-									// Track the button click event
-									trackEvent('try_desktop_athlete_now_button', {
-										params: {
-											action: "Click",
-											event_category: "Navigation",
-											event_label: "Try Desktop Athlete Now!",
-											component: "About Screen",
-										},
-										audioSrc: "/retro-8bit-music-logo-ni-sound-1-00-04.mp3",
-										audioVolume: 0.1,
-									});
-									const audio = new Audio('/retro-8bit-music-logo-ni-sound-1-00-04.mp3');
-									audio.volume = 0.1; // Set volume to 10% (adjust this value between 0-1)
-									audio.play();
-								}}
-								className={`inline-block text-center px-4 py-2 border-4
-									border-[${theme.primary}]
-									bg-[${theme.primary}]
-									text-[${theme.secondary}]
-									font-bold shadow-[4px_4px_0px_0px]
-									shadow-[${theme.secondary}]
-									hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px]
-									active:translate-x-[4px] active:translate-y-[4px] active:shadow-none
-									transition-all`}
-								>
-									Try Desktop Athlete Now!
+				onClick={() => {
+					// Track the button click event
+					trackEvent('try_desktop_athlete_now_button', {
+						params: {
+							action: "Click",
+							event_category: "Navigation",
+							event_label: "Try Desktop Athlete Now!",
+							component: "About Screen",
+						},
+						audioSrc: "/retro-8bit-music-logo-ni-sound-1-00-04.mp3",
+						audioVolume: 0.1,
+					});
+					const audio = new Audio('/retro-8bit-music-logo-ni-sound-1-00-04.mp3');
+					audio.volume = 0.1; // Set volume to 10% (adjust this value between 0-1)
+					audio.play();
+				}}
+				className={`inline-block text-center px-4 py-2 border-4
+					border-[${theme.primary}]
+					bg-[${theme.primary}]
+					text-[${theme.secondary}]
+					font-bold shadow-[4px_4px_0px_0px]
+					shadow-[${theme.secondary}]
+					hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px]
+					active:translate-x-[4px] active:translate-y-[4px] active:shadow-none
+					transition-all`}
+				>
+					Try Desktop Athlete Now!
               </Link>
-							<div className="mt-4 flex justify-center md:justify-start">
-								<a
-									href="https://www.buymeacoffee.com/markreyes"
-									target="_blank"
-									onClick={trackEvent("social_click", {
-										params: {
-											platform: "Buy Me A Coffee",
-											link_type: "profile",
-											component: "About Screen"
-										}
-									})}
-									className="block
-									border-[${theme.accent}]
-									text-[${theme.secondary}]
-									font-bold shadow-[4px_4px_0px_0px]
-									hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)]
-									active:translate-x-[4px] active:translate-y-[4px] active:shadow-none
-									transition-all"
-									rel="noopener noreferrer"
-									title="Support Desktop Athlete by buying Mark a coffee"
-								>
-									<img
-										src="https://cdn.buymeacoffee.com/buttons/v2/default-violet.png"
-										alt="Buy Me A Coffee"
-										className="h-12 w-auto max-w-[200px]"
-									/>
-								</a>
-							</div>
             </div>
           </div>
         </div>
