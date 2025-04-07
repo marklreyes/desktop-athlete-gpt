@@ -15,7 +15,7 @@ export function VideoPlayer({ videoUrl, title }: { videoUrl: string; title: stri
 	const videoId = getYouTubeVideoId(videoUrl);
 
 	return (
-	  <div className={`w-full h-0 pb-[56.25%] relative border-[${theme.primary}]`}>
+	  <div className={`w-full h-0 pb-[56.25%] relative border-4`}>
 		<YouTube
 		  videoId={videoId}
 		  className="absolute top-0 left-0 w-full h-full"

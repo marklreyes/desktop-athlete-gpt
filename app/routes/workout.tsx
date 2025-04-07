@@ -25,31 +25,41 @@ export function meta({}: Route.MetaArgs) {
 	const [title, setTitle] = useState<string>("");
 
 	useEffect(() => {
-	  // First try to get values from location state (on initial navigation)
-	  const stateUrl = location.state?.url;
-	  const stateTitle = location.state?.content;
+		// First try to get values from location state (on initial navigation)
+		const stateUrl = location.state?.url;
+		let stateTitle = location.state?.content;
 
-	  if (stateUrl && stateTitle) {
-		// We have state from navigation, store it for future refreshes
-		localStorage.setItem('workout-video-url', stateUrl);
-		localStorage.setItem('workout-video-title', stateTitle);
-		setVideoUrl(stateUrl);
-		setTitle(stateTitle);
-	  } else {
-		// No state (page was refreshed), try localStorage
-		const savedUrl = localStorage.getItem('workout-video-url');
-		const savedTitle = localStorage.getItem('workout-video-title');
-
-		if (savedUrl && savedTitle) {
-		  setVideoUrl(savedUrl);
-		  setTitle(savedTitle);
-		} else {
-		  // Fallback to defaults if nothing is available
-		  setVideoUrl("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
-		  setTitle("Workout of The Day");
+		// Check if title is too short and use default if needed
+		if (!stateTitle || typeof stateTitle !== 'string' || stateTitle.length <= 5) {
+		  stateTitle = "Workout of The Day";
 		}
-	  }
-	}, [location]);
+
+		if (stateUrl && stateTitle) {
+		  // We have state from navigation, store it for future refreshes
+		  localStorage.setItem('workout-video-url', stateUrl);
+		  localStorage.setItem('workout-video-title', stateTitle);
+		  setVideoUrl(stateUrl);
+		  setTitle(stateTitle);
+		} else {
+		  // No state (page was refreshed), try localStorage
+		  const savedUrl = localStorage.getItem('workout-video-url');
+		  let savedTitle = localStorage.getItem('workout-video-title');
+
+		  // Check if saved title is too short and use default if needed
+		  if (!savedTitle || savedTitle.length <= 5) {
+			savedTitle = "Workout of The Day";
+		  }
+
+		  if (savedUrl && savedTitle) {
+			setVideoUrl(savedUrl);
+			setTitle(savedTitle);
+		  } else {
+			// Fallback to defaults if nothing is available
+			setVideoUrl("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+			setTitle("Workout of The Day");
+		  }
+		}
+	  }, [location]);
 	return (
 		<div>
 			<div className="flex flex-col items-center justify-center text-center">
