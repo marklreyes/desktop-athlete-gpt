@@ -20,8 +20,6 @@ export default function Header() {
 						});
 					}}
 					className={`block border-2 border-[${theme.secondary}] p-3`}>
-                    {/* Visually hidden heading for screen readers */}
-                    <h1 className="sr-only">Desktop Athlete</h1>
                     <img
                         src="/logo_desktopathlete.jpg"
                         alt="Desktop Athlete Logo"
