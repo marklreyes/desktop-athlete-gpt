@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { useLoaderData, type LoaderFunctionArgs } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import { VisuallyHidden } from "../components/VisuallyHidden";
@@ -36,6 +37,7 @@ export async function loader({}: LoaderFunctionArgs) {
 export default function Chat() {
 	const { theme } = useTheme();
 	const data = useLoaderData() as { messages: Message[] };
+	const navigate = useNavigate();
 
 	// Initialize messages from localStorage or loader data
 	const [messages, setMessages] = useState<Message[]>(() => {
@@ -653,25 +655,32 @@ export default function Chat() {
 							),
                             a: ({ href, children }) => (
 								<a href={href}
-								onClick={trackEvent("chat_link_click", {
-									params: {
-										action: "Click",
-										action_at: new Date().toISOString(),
-										event_category: "Navigation",
-										event_label: "OpenAI Assistant Message Link",
-										platform: "OpenAI",
-										platform_category: "OpenAI Assistant Message",
-										platform_label: "OpenAI Assistant Message Link",
-										platform_href: href,
-										platform_text: children,
-										platform_title: "Desktop Athlete Workout",
-										link_type: "chat",
-										component: "Chat Markdown Component"
-									}
-								})}
-								target="_blank"
-								rel="noopener noreferrer"
-								className={`text-[${theme.secondary}] underline hover:text-[${theme.secondary}]`}
+									onClick={(e) => {
+										e.preventDefault();
+										trackEvent("chat_link_click", {
+											params: {
+												action: "Click",
+												action_at: new Date().toISOString(),
+												event_category: "Navigation",
+												event_label: "OpenAI Assistant Message Link",
+												platform: "OpenAI",
+												platform_category: "OpenAI Assistant Message",
+												platform_label: "OpenAI Assistant Message Link",
+												platform_href: href,
+												platform_text: children,
+												platform_title: "Desktop Athlete Workout",
+												link_type: "chat",
+												component: "Chat Markdown Component"
+											}
+										})();
+										navigate("/workout", {
+											state: {
+												url: href,
+												content: children
+											}
+										});
+									}}
+									className={`text-[${theme.secondary}] underline hover:text-[${theme.secondary}]`}
 								>
 									{children}
 								</a>

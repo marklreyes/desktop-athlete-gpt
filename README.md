@@ -1,7 +1,6 @@
-# React Router Netlify Template
+# Desktop Athlete GPT
 
-A modern, production-ready template for building full-stack React applications using React Router,
-deployed to Netlify.
+AI-powered assistant offering free, quick, and effective exercise programs for busy individuals. Built on top of a modern, production-ready template aimed at full-stack React applications using React Router, deployed to Netlify.
 
 ## Features
 
@@ -10,7 +9,10 @@ deployed to Netlify.
 - 📦 Asset bundling and optimization
 - 🔄 Data loading and mutations
 - 🔒 TypeScript by default
+- 🌼 daisyUI for component library
+- 🌓 Light/Dark Mode
 - 🎉 TailwindCSS for styling
+- ☁️  Netlify Functions (OpenAI)
 - 📖 [React Router docs](https://reactrouter.com/)
 - 💻 Configured for deployment to Netlify
 
