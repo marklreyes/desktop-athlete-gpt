@@ -62,11 +62,11 @@ export function Welcome() {
 						to="/chat"
 						onClick={() => {
 							// Track the button click event
-							trackEvent("press_any_button", {
+							trackEvent("begin_workout_button", {
 								params: {
 									action: "Click",
 									event_category: "Navigation",
-									event_label: "Press Any Button",
+									event_label: "Begin Workout",
 									component: "Welcome Screen",
 								},
 								audioSrc: "/retro-8bit-music-logo-ni-sound-1-00-04.mp3",
@@ -88,7 +88,7 @@ export function Welcome() {
 							active:translate-x-[4px] active:translate-y-[4px] active:shadow-none
 							transition-all`}
 					>
-						Press Any Button
+						Begin Workout
 					</Link>
 					<div className="text-sm mt-4 text-white">
 						<p>
