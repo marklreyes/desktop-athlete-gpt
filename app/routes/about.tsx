@@ -26,6 +26,9 @@ export default function About() {
     <div
       className="flex flex-col items-center px-4 py-8"
       style={{ minHeight: 'calc(100vh - 57px - 157px)' }}
+	  role="main"
+	  aria-label="About the Creator"
+	  aria-live="polite"
     >
       <div className={`w-full max-w-3xl border-4 border-[${theme.accent}] bg-[${theme.primary}]`}>
         {/* Header with 8-bit style banner */}
