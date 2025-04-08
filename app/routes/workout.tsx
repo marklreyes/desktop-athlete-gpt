@@ -1,9 +1,11 @@
 import type { Route } from "./+types/home";
 import { useTheme } from "../context/ThemeContext";
 import { Link, useLocation } from "react-router-dom";
-import { trackEvent } from "~/utils/trackEvent";
-import { VideoPlayer } from "~/components/VideoPlayer";
+import { trackEvent } from "../utils/trackEvent";
+import { VideoPlayer } from "../components/VideoPlayer";
 import { useEffect, useState } from "react";
+import Confetti from "react-confetti";
+import { Toast } from "../components/Toast";
 
 export function meta({}: Route.MetaArgs) {
 	return [
@@ -19,10 +21,30 @@ export function meta({}: Route.MetaArgs) {
   export default function Workout() {
 	const { theme } = useTheme();
 	const location = useLocation();
+	const [showToast, setShowToast] = useState(true);
 
 	// Use useState to manage the video URL and title
 	const [videoUrl, setVideoUrl] = useState<string>("");
 	const [title, setTitle] = useState<string>("");
+
+	// Add state to track if video has finished playing
+	const [videoCompleted, setVideoCompleted] = useState(false);
+
+	// Handle video completion
+	const handleVideoEnd = () => {
+		console.log("Video playback completed!");
+		setVideoCompleted(true);
+
+		// Optional: Track completion event
+		trackEvent("workout_completed", {
+			params: {
+				action: "Complete",
+				event_category: "Workout",
+				event_label: title,
+				video_url: videoUrl
+			}
+		})();
+	};
 
 	useEffect(() => {
 		// First try to get values from location state (on initial navigation)
@@ -62,11 +84,34 @@ export function meta({}: Route.MetaArgs) {
 	  }, [location]);
 	return (
 		<div>
+			{/* Show a celebration message when completed */}
+			{videoCompleted && (
+				<Toast
+					role="status"
+					aria-live="polite"
+					showToast={showToast}
+					setShowToast={setShowToast}
+					message="🏆 Workout Complete! Great job!"
+				/>
+			)}
+      		{/* Only show confetti when video is completed */}
+			{videoCompleted && (
+				<Confetti
+				width={window.innerWidth}
+				height={window.innerHeight}
+				recycle={false}  // Stop after one cycle
+				numberOfPieces={500}  // More pieces for a celebratory feel
+				/>
+			)}
 			<div className="flex flex-col items-center justify-center text-center">
 				<h1 className="text-4xl font-bold mb-4">{title}</h1>
 				<p className="text-lg mb-4">Presented by Desktop Athlete</p>
 				<p className="text-lg mb-4">Follow along with the video below:</p>
-				<VideoPlayer videoUrl={videoUrl} title={title} />
+				<VideoPlayer
+					videoUrl={videoUrl}
+					title={title}
+					onVideoEnd={handleVideoEnd}
+				/>
 				<Link to="/chat"
 					onClick={() => {
 						trackEvent("return_to_chat", {

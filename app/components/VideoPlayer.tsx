@@ -1,8 +1,8 @@
 import YouTube from "react-youtube";
 import { useTheme } from "../context/ThemeContext";
-import { trackEvent } from "~/utils/trackEvent";
+import { trackEvent } from "../utils/trackEvent";
 
-export function VideoPlayer({ videoUrl, title }: { videoUrl: string; title: string }) {
+export function VideoPlayer({ videoUrl, title, onVideoEnd }: { videoUrl: string; title: string, onVideoEnd?: () => void;  }) {
 	const { theme } = useTheme();
 
 	// Extract video ID from URL
@@ -21,7 +21,11 @@ export function VideoPlayer({ videoUrl, title }: { videoUrl: string; title: stri
 		  className="absolute top-0 left-0 w-full h-full"
 		  opts={{
 			width: '100%',
-			height: '100%'
+			height: '100%',
+			playerVars: {
+				modestbranding: 1,
+				rel: 0
+			}
 		  }}
 		  onEnd={() => {
 			trackEvent("video_end", {
@@ -30,6 +34,10 @@ export function VideoPlayer({ videoUrl, title }: { videoUrl: string; title: stri
 				video_url: videoUrl
 			  }
 			})();
+			// Call the parent component's callback if provided
+			if (onVideoEnd) {
+				onVideoEnd();
+			}
 		}}
 		  onPause={() => {
 			trackEvent("video_pause", {

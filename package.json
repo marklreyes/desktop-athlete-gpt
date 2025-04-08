@@ -18,6 +18,7 @@
     "isbot": "^5.1.25",
     "openai": "^4.90.0",
     "react": "^19.0.0",
+    "react-confetti": "^6.4.0",
     "react-dom": "^19.0.0",
     "react-markdown": "^10.0.0",
     "react-router": "^7.0.2",
