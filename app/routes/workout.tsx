@@ -98,7 +98,7 @@ export function meta({}: Route.MetaArgs) {
 					aria-live="polite"
 					showToast={showToast}
 					setShowToast={setShowToast}
-					message="🏆 Workout Complete! Great job!"
+					message="🏆 Workout complete! Great job!"
 				/>
 			)}
       		{/* Only show confetti when video is completed */}
