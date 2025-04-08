@@ -52,7 +52,7 @@ export function meta({}: Route.MetaArgs) {
 		let stateTitle = location.state?.content;
 
 		// Check if title is too short and use default if needed
-		if (!stateTitle || typeof stateTitle !== 'string' || stateTitle.length <= 5) {
+		if (!stateTitle || typeof stateTitle !== 'string' || stateTitle.length <= 10) {
 		  stateTitle = "Workout of The Day";
 		}
 
@@ -68,7 +68,7 @@ export function meta({}: Route.MetaArgs) {
 		  let savedTitle = localStorage.getItem('workout-video-title');
 
 		  // Check if saved title is too short and use default if needed
-		  if (!savedTitle || savedTitle.length <= 5) {
+		  if (!savedTitle || savedTitle.length <= 10) {
 			savedTitle = "Workout of The Day";
 		  }
 
@@ -83,7 +83,14 @@ export function meta({}: Route.MetaArgs) {
 		}
 	  }, [location]);
 	return (
-		<div>
+		<div
+			className="flex flex-col items-center justify-center py-6"
+			style={{ minHeight: 'calc(100vh - 57px - 157px)' }}
+			role="region"
+			aria-label="Workout of the Day"
+			aria-live="polite"
+			aria-busy={videoCompleted ? "false" : "true"}
+		>
 			{/* Show a celebration message when completed */}
 			{videoCompleted && (
 				<Toast
@@ -96,17 +103,21 @@ export function meta({}: Route.MetaArgs) {
 			)}
       		{/* Only show confetti when video is completed */}
 			{videoCompleted && (
+			<div className="fixed inset-0 flex items-center justify-center pointer-events-none z-50">
 				<Confetti
-				width={window.innerWidth}
-				height={window.innerHeight}
-				recycle={false}  // Stop after one cycle
-				numberOfPieces={500}  // More pieces for a celebratory feel
+					width={Math.min(window.innerWidth)} // Limit width to create more centered effect
+					height={window.innerHeight} // Use 80% of window height
+					recycle={false}
+					numberOfPieces={5000}
+					colors={['#f39416', '#01F1FC', '#331C40', '#B4D0D1']} // Match your theme colors
+					gravity={0.3} // Slower fall for better visibility
 				/>
+			</div>
 			)}
-			<div className="flex flex-col items-center justify-center text-center">
-				<h1 className="text-4xl font-bold mb-4">{title}</h1>
-				<p className="text-lg mb-4">Presented by Desktop Athlete</p>
-				<p className="text-lg mb-4">Follow along with the video below:</p>
+			<div className="flex flex-col items-center justify-center text-center w-full max-w-5xl px-4">
+				<h1 className="text-3xl font-bold mb-4">{title}</h1>
+				<p className="text-md mb-4">Presented by Desktop Athlete</p>
+				<p className="text-md mb-4">Follow along with the video below:</p>
 				<VideoPlayer
 					videoUrl={videoUrl}
 					title={title}
