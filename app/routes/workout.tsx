@@ -6,6 +6,7 @@ import { VideoPlayer } from "../components/VideoPlayer";
 import { useEffect, useState } from "react";
 import Confetti from "react-confetti";
 import { Toast } from "../components/Toast";
+import Notifications from "../components/Notifications";
 
 export function meta({}: Route.MetaArgs) {
 	return [
@@ -148,6 +149,7 @@ export function meta({}: Route.MetaArgs) {
 				}>
 					Back to Chat
 				</Link>
+				<Notifications/>
 			</div>
 		</div>
 	);
