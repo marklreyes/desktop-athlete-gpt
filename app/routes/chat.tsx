@@ -794,6 +794,7 @@ export default function Chat() {
                   : "Send message"
               }
               className={`w-full sm:w-auto px-4 py-2
+				cursor-pointer
 				border-[${theme.primary}]
 				${theme.background}
 				text-[${theme.secondary}]

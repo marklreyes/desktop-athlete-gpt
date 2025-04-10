@@ -48,6 +48,7 @@ export function Toast({
 				className={`
 					bg-[${theme.primary}]
 					btn btn-circle btn-xs md:btn-sm
+					cursor-pointer
 					border-2
 					border-white
 					absolute top-1 right-2`}

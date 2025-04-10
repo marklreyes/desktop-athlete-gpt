@@ -28,6 +28,9 @@ export function VideoPlayer({ videoUrl, title, onVideoEnd }: { videoUrl: string;
 			}
 		  }}
 		  onEnd={() => {
+			// Dispatch workout completed event
+			window.dispatchEvent(new Event('workout-completed'));
+
 			trackEvent("video_end", {
 			  params: {
 				video_title: title,
