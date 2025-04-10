@@ -24,7 +24,18 @@ export function VideoPlayer({ videoUrl, title, onVideoEnd }: { videoUrl: string;
 			height: '100%',
 			playerVars: {
 				modestbranding: 1,
-				rel: 0
+				rel: 0,               // This restricts related videos to same channel
+				showinfo: 0,          // Hides video info (deprecated but still works in some browsers)
+				iv_load_policy: 3,    // Disables annotations
+				autoplay: 0,
+				controls: 1,
+				disablekb: 0,
+				fs: 1,                // Allow fullscreen
+				start: 0,
+				end: 0,               // Set dynamically if you know video duration (optional)
+				loop: 0,
+				playsinline: 1,       // Plays inline on iOS
+				origin: window.location.origin  // Security feature
 			}
 		  }}
 		  onEnd={() => {
