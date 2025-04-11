@@ -2,6 +2,8 @@
 
 AI-powered assistant offering free, quick, and effective exercise programs for busy individuals. Built on top of a modern, production-ready template aimed at full-stack React applications using React Router, deployed to Netlify.
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/0efe35a2-9d36-4786-8daa-f358fbe9e215/deploy-status)](https://app.netlify.com/sites/desktopathlete/deploys)
+
 ## Features
 
 - 🚀 Server-side rendering

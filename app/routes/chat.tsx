@@ -704,15 +704,17 @@ export default function Chat() {
                   }
                 }
 
-                return <p className="text-black">
-                  Hi, I'm Desktop Athlete, your AI guide for free 20+ minute workouts. No weights or equipment required. Just your mat, water bottle, and a towel.
-                  <br />
-                  <br />
-                  Be honest...that email can wait.
-                  <br />
-                  <br />
-                  So what're you waiting for? Let's do it!
-                </p>;
+                return <div className="text-black">
+					<p className="mb-2">👋 Hi, I'm Desktop Athlete! I create personalized workouts that need no equipment—just you, a mat, water, and a towel.</p>
+					<p className="mb-2">Try asking me things like:</p>
+					<ul className="mb-2 ml-5 list-disc">
+					<li>A quick 20-minute HIIT workout</li>
+					<li>Upper body workout for beginners</li>
+					<li>Stretching routine for desk workers</li>
+					<li>Tabata workout to burn calories</li>
+					</ul>
+					<p>What kind of workout can I create for you today?</p>
+			  	</div>;
               })()}
             </div>
           </div>
@@ -754,7 +756,7 @@ export default function Chat() {
 					setInputMessage(""); // Clear input after sending
                 }
               }}
-              placeholder="Suggest a 20 minute workout!"
+              placeholder="What workout today?"
               maxLength={MAX_MESSAGE_LENGTH}
               disabled={isLoading} // Only disable when isLoading is true
               className={`w-full text-black p-2 bg-white border focus:outline-none focus:ring-2 ${
