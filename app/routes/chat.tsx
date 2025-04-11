@@ -7,6 +7,7 @@ import { sanitizeInput } from "~/utils/sanitizer";
 import type { Route } from "./+types/chat";
 import { useTheme } from "../context/ThemeContext";
 import { trackEvent } from "~/utils/trackEvent";
+import { AudioControls } from "~/components/AudioControls";
 
 interface Message {
   role: "user" | "assistant" | "system";
@@ -38,6 +39,7 @@ export default function Chat() {
 	const { theme } = useTheme();
 	const data = useLoaderData() as { messages: Message[] };
 	const navigate = useNavigate();
+	const [hasUserInteracted, setHasUserInteracted] = useState(false);
 
 	// Initialize messages from localStorage or loader data
 	const [messages, setMessages] = useState<Message[]>(() => {
@@ -53,9 +55,6 @@ export default function Chat() {
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 	const [threadId, setThreadId] = useState<string | null>(null);
 	const [runId, setRunId] = useState<string | null>(null);
-
-	// Add this at the top of your component
-	const audioRef = useRef<HTMLAudioElement | null>(null);
 
 	// TODO - Load threadId from localStorage based on revisited UX
 	// useEffect(() => {
@@ -88,50 +87,7 @@ export default function Chat() {
 		};
 	}, []); // Empty dependency array ensures this runs only on mount/unmount
 
-	// Update the useEffect for audio with looping functionality
-	useEffect(() => {
-		// Create the audio element early so we can reference it later
-		const audio = new Audio('/pixel-playground-color-parade-main-version-25382-01-43.mp3');
-		audio.volume = 0.1;
-		audioRef.current = audio;
 
-		// Add event listener for when the audio ends to restart it
-		const handleAudioEnd = () => {
-		// console.log("Audio track ended, restarting...");
-		if (audioRef.current) {
-			audioRef.current.currentTime = 0; // Reset to beginning
-			audioRef.current.play().catch(error => {
-			console.error("Error replaying audio:", error);
-			});
-		}
-		};
-
-		// Add the ended event listener to create a loop
-		audio.addEventListener('ended', handleAudioEnd);
-
-		// Set a timeout to play the music after 5 seconds
-		const audioTimer = setTimeout(() => {
-		try {
-			// Play the audio and handle potential autoplay policy errors
-			audio.play().catch(error => {
-			console.error("Error playing audio:", error);
-			});
-		} catch (error) {
-			console.error("Error playing audio:", error);
-		}
-		}, 5000);
-
-		// Clean up function that runs when component unmounts
-		return () => {
-		clearTimeout(audioTimer);
-		if (audioRef.current) {
-			// Remove the event listener to prevent memory leaks
-			audioRef.current.removeEventListener('ended', handleAudioEnd);
-			audioRef.current.pause();
-			audioRef.current.currentTime = 0; // Reset position
-		}
-		};
-	}, []);
 
 	function powerUp() {
 		const audio = new Audio('/retro-game-coin-pickup-jam-fx-1-00-03.mp3');
@@ -820,6 +776,15 @@ export default function Chat() {
         </div>
 
       </div>
-    </div>
+	<AudioControls
+		audioSrc="/pixel-playground-color-parade-main-version-25382-01-43.mp3"
+		defaultVolume={0.1}
+		autoPlay={true}
+        autoPlayDelay={hasUserInteracted ? 0 : 5000} // Skip delay if user has interacted
+		loop={true}
+		position="bottom-right"
+        onUserInteraction={() => setHasUserInteracted(true)}
+	/>
+	</div>
   );
 }
