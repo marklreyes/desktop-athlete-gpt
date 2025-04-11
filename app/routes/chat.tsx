@@ -756,7 +756,7 @@ export default function Chat() {
 					setInputMessage(""); // Clear input after sending
                 }
               }}
-              placeholder="What type of workout are you looking for?"
+              placeholder="What workout today?"
               maxLength={MAX_MESSAGE_LENGTH}
               disabled={isLoading} // Only disable when isLoading is true
               className={`w-full text-black p-2 bg-white border focus:outline-none focus:ring-2 ${
