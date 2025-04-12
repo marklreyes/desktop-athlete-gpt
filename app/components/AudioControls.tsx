@@ -9,7 +9,7 @@ interface AudioControlsProps {
   autoPlayDelay?: number;
   loop?: boolean;
   position?: "bottom-right" | "bottom-left" | "top-right" | "top-left";
-  onUserInteraction?: () => void; // New callback prop
+  onUserInteraction?: () => void;
 }
 
 export function AudioControls({
@@ -19,13 +19,13 @@ export function AudioControls({
   autoPlayDelay = 5000,
   loop = true,
   position = "bottom-right",
-  onUserInteraction // New callback prop
+  onUserInteraction
 }: AudioControlsProps) {
   const { theme } = useTheme();
   const [isPlaying, setIsPlaying] = useState(false);
-  const [volume, setVolume] = useState(defaultVolume);
+  const [isMuted, setIsMuted] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [isExpanded, setIsExpanded] = useState(false); // New state for collapsible UI
+  const [isExpanded, setIsExpanded] = useState(false);
 
   // Position styles mapping
   const positionStyles = {
@@ -38,7 +38,7 @@ export function AudioControls({
   useEffect(() => {
     // Create the audio element
     const audio = new Audio(audioSrc);
-    audio.volume = volume;
+    audio.volume = defaultVolume;
     audioRef.current = audio;
 
     // Set up loop handling
@@ -80,14 +80,7 @@ export function AudioControls({
         audioRef.current.currentTime = 0;
       }
     };
-  }, [audioSrc, loop, autoPlay, autoPlayDelay]);
-
-  // Add a separate effect to handle volume changes
-  useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.volume = volume;
-    }
-  }, [volume]);
+  }, [audioSrc, loop, autoPlay, autoPlayDelay, defaultVolume]);
 
   const toggleAudio = () => {
     if (audioRef.current) {
@@ -126,23 +119,23 @@ export function AudioControls({
     }
   };
 
-  const changeVolume = (newVolume: number) => {
+  const toggleMute = () => {
     if (audioRef.current) {
-		audioRef.current.volume = newVolume;
-		setVolume(newVolume);
+      const newMutedState = !isMuted;
+      audioRef.current.muted = newMutedState;
+      setIsMuted(newMutedState);
 
-		// Call the callback when user interacts
-		if (onUserInteraction) onUserInteraction();
+      // Call the callback when user interacts
+      if (onUserInteraction) onUserInteraction();
 
-		trackEvent("audio_control", {
-			params: {
-				action: "Volume Change",
-				event_category: "Audio",
-				event_label: "Background Music",
-				value: Math.round(newVolume * 100),
-				component: "Audio Controls"
-			}
-		})();
+      trackEvent("audio_control", {
+        params: {
+          action: newMutedState ? "Mute" : "Unmute",
+          event_category: "Audio",
+          event_label: "Background Music",
+          component: "Audio Controls"
+        }
+      })();
     }
   };
 
@@ -152,152 +145,83 @@ export function AudioControls({
       role="region"
       aria-label="Music controls"
     >
-      	{/* Mobile view - collapsed by default */}
-		<div className="md:hidden">
-			{isExpanded ? (
-			// Expanded view for mobile
-			<div className="flex flex-col items-center gap-2">
-				<div className="flex w-full justify-between items-center mb-2">
-				<button
-					onClick={toggleAudio}
-					className={`w-8 h-8 flex items-center justify-center border-2 border-[${theme.accent}] bg-white cursor-pointer`}
-					aria-label={isPlaying ? "Pause music" : "Play music"}
-				>
-					{/* Play/Pause icon (existing code) */}
-					{isPlaying ? (
-					<div className="flex gap-1 items-center">
-						<div className={`w-1 h-4 bg-[${theme.primary}]`}></div>
-						<div className={`w-1 h-4 bg-[${theme.primary}]`}></div>
-					</div>
-					) : (
-					<div
-						className="w-0 h-0 ml-1"
-						style={{
-						borderTop: '5px solid transparent',
-						borderBottom: '5px solid transparent',
-						borderLeft: `7px solid ${theme.primary}`
-						}}
-					></div>
-					)}
-				</button>
+      {/* Mobile view - single button */}
+      <div className="md:hidden">
+        <button
+          onClick={toggleMute}
+          className={`w-8 h-8 flex items-center justify-center border-2 border-[${theme.accent}] bg-white cursor-pointer`}
+          aria-label={isMuted ? "Unmute music" : "Mute music"}
+          title={isMuted ? "Unmute music" : "Mute music"}
+        >
+          {/* 8-bit style speaker icon */}
+          <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" className="block">
+            {/* Speaker body */}
+            <rect x="2" y="6" width="2" height="4" fill="black" />
+            <rect x="4" y="4" width="2" height="8" fill="black" />
+            <rect x="6" y="2" width="2" height="12" fill="black" />
 
-				{/* Collapse button */}
-				<button
-					onClick={() => {
-					setIsExpanded(false);
-					if (onUserInteraction) onUserInteraction();
-					}}
-					className="text-xs px-2 py-1 border border-[${theme.accent}] bg-white cursor-pointer"
-					aria-label="Collapse audio controls"
-				>
-					▼
-				</button>
-				</div>
+            {/* Sound waves (only show when not muted) */}
+            {!isMuted && (
+              <>
+                <rect x="9" y="4" width="1" height="8" fill="black" />
+                <rect x="11" y="2" width="1" height="12" fill="black" />
+                <rect x="13" y="4" width="1" height="8" fill="black" />
+              </>
+            )}
 
-				{/* Volume controls */}
-				<div className="flex gap-1">
-				{[0.0, 0.33, 0.66, 1.0].map((vol) => (
-					<button
-					  key={vol}
-					  onClick={() => changeVolume(vol)}
-					  className={`w-5 h-5 flex items-center justify-center border border-[${theme.accent}] ${
-						Math.abs(volume - vol) < 0.1 ? `bg-[${theme.secondary}]` : 'bg-white'
-					  } text-xs cursor-pointer`}
-					  aria-label={`Set volume to ${Math.round(vol * 100)}%`}
-					>
-					  {vol === 0 ? (
-						<span>✕</span>
-					  ) : (
-						<div className="flex items-end gap-[2px] h-3">
-						  {Array.from({ length: Math.ceil(vol * 3) }).map((_, i) => (
-							<div
-							  key={i}
-							  className={`w-[2px] bg-[${theme.primary}]`}
-							  style={{ height: `${(i+1) * 33}%` }}
-							></div>
-						  ))}
-						</div>
-					  )}
-					</button>
-				))}
-				</div>
-			</div>
-			) : (
-			// Collapsed view - just shows a music icon
-			<button
-				onClick={() => {
-				setIsExpanded(true);
-				if (onUserInteraction) onUserInteraction();
-				}}
-				className={`w-8 h-8 flex items-center justify-center border-2 border-[${theme.accent}] bg-white cursor-pointer`}
-				aria-label="Expand audio controls"
-			>
-				<span role="img" aria-label="music">
-					🔈
-				</span>
-			</button>
-			)}
-		</div>
+            {/* X for muted (only show when muted) */}
+            {isMuted && (
+              <>
+                <rect x="8" y="4" width="2" height="2" fill="black" />
+                <rect x="10" y="6" width="2" height="2" fill="black" />
+                <rect x="12" y="8" width="2" height="2" fill="black" />
+                <rect x="8" y="10" width="2" height="2" fill="black" />
+                <rect x="10" y="8" width="2" height="2" fill="black" />
+                <rect x="12" y="6" width="2" height="2" fill="black" />
+              </>
+            )}
+          </svg>
+        </button>
+      </div>
 
-		{/* Desktop view - always expanded */}
-		<div className="hidden md:block">
-			<div className="flex flex-col items-center gap-2">
-				<button
-				onClick={toggleAudio}
-				className={`w-8 h-8 flex items-center justify-center border-2 border-[${theme.accent}] bg-white hover:translate-y-[1px] transition-transform cursor-pointer`}
-				aria-label={isPlaying ? "Pause music" : "Play music"}
-				title={isPlaying ? "Pause music" : "Play music"}
-				>
-				{isPlaying ? (
-					// Pause icon (two vertical bars)
-					<div className="flex gap-1 items-center">
-					<div className={`w-1 h-4 bg-[${theme.primary}]`}></div>
-					<div className={`w-1 h-4 bg-[${theme.primary}]`}></div>
-					</div>
-				) : (
-					// Play icon (triangle)
-					<div
-					className="w-0 h-0 ml-1"
-					style={{
-						borderTop: '5px solid transparent',
-						borderBottom: '5px solid transparent',
-						borderLeft: `7px solid ${theme.primary}`
-					}}
-					></div>
-				)}
-				</button>
+      {/* Desktop view - single button */}
+      <div className="hidden md:block">
+        <button
+          onClick={toggleMute}
+          className={`w-8 h-8 flex items-center justify-center border-2 border-[${theme.accent}] bg-white hover:translate-y-[1px] transition-transform cursor-pointer`}
+          aria-label={isMuted ? "Unmute music" : "Mute music"}
+          title={isMuted ? "Unmute music" : "Mute music"}
+        >
+          {/* 8-bit style speaker icon */}
+          <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" className="block">
+            {/* Speaker body */}
+            <rect x="2" y="6" width="2" height="4" fill="black" />
+            <rect x="4" y="4" width="2" height="8" fill="black" />
+            <rect x="6" y="2" width="2" height="12" fill="black" />
 
-				<div className="flex gap-1">
-				{[0.0, 0.33, 0.66, 1.0].map((vol) => (
-					<button
-					key={vol}
-					onClick={() => changeVolume(vol)}
-					className={`w-5 h-5 flex items-center justify-center border border-[${theme.accent}] ${
-						Math.abs(volume - vol) < 0.1 ? `bg-[${theme.secondary}]` : 'bg-white'
-					} hover:translate-y-[1px] transition-transform text-xs cursor-pointer`}
-					aria-label={`Set volume to ${Math.round(vol * 100)}%`}
-					title={`Volume: ${Math.round(vol * 100)}%`}
-					>
-					{vol === 0 ? (
-						// Mute icon
-						<span>✕</span>
-					) : (
-						// Volume bars
-						<div className="flex items-end gap-[2px] h-3">
-						{Array.from({ length: Math.ceil(vol * 3) }).map((_, i) => (
-							<div
-							key={i}
-							className={`w-[2px] bg-[${theme.primary}]`}
-							style={{ height: `${(i+1) * 33}%` }}
-							></div>
-						))}
-						</div>
-					)}
-					</button>
-				))}
-				</div>
-			</div>
-		</div>
+            {/* Sound waves (only show when not muted) */}
+            {!isMuted && (
+              <>
+                <rect x="9" y="4" width="1" height="8" fill="black" />
+                <rect x="11" y="2" width="1" height="12" fill="black" />
+                <rect x="13" y="4" width="1" height="8" fill="black" />
+              </>
+            )}
+
+            {/* X for muted (only show when muted) */}
+            {isMuted && (
+              <>
+                <rect x="8" y="4" width="2" height="2" fill="black" />
+                <rect x="10" y="6" width="2" height="2" fill="black" />
+                <rect x="12" y="8" width="2" height="2" fill="black" />
+                <rect x="8" y="10" width="2" height="2" fill="black" />
+                <rect x="10" y="8" width="2" height="2" fill="black" />
+                <rect x="12" y="6" width="2" height="2" fill="black" />
+              </>
+            )}
+          </svg>
+        </button>
+      </div>
     </div>
   );
 }
