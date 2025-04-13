@@ -38,7 +38,9 @@ export default function Notifications() {
 
   // Function to show workout reminder notification
   const showWorkoutReminderNotification = () => {
-    if (permissionStatus === "granted") {
+    // Check permission directly from Notification API instead of using component state
+    if ("Notification" in window && Notification.permission === "granted") {
+      console.log("Showing workout reminder notification");
       const notification = new Notification("Time for a Workout! 💪", {
         body: "It's been 24 hours since your last exercise. Ready for another Desktop Athlete workout?",
         icon: "/favicon.ico",
@@ -67,6 +69,8 @@ export default function Notifications() {
           }
         });
       };
+    } else {
+      console.error("Cannot show notification: permission not granted");
     }
   };
 
@@ -106,6 +110,10 @@ export default function Notifications() {
       const now = Date.now();
       const timeUntilReminder = Math.max(0, targetTime - now);
 
+      // Also store the target timestamp for when the reminder should appear
+      // This helps us recover if the timeout is lost due to browser refresh/close
+      localStorage.setItem('next-reminder-timestamp', targetTime.toString());
+
       // Set timeout for next reminder
       const timeoutId = window.setTimeout(() => {
         if (check24HoursPassed()) {
@@ -126,7 +134,7 @@ export default function Notifications() {
     if ("Notification" in window) {
       setPermissionStatus(Notification.permission);
 
-      // If permission is already granted, show welcome notification
+      // If permission is already granted
       if (Notification.permission === "granted") {
         // Only show welcome notification if it's the first time
         if (!localStorage.getItem('notification-welcomed')) {
@@ -134,13 +142,23 @@ export default function Notifications() {
           localStorage.setItem('notification-welcomed', 'true');
         }
 
-        // Check if we need to remind about workout
-        if (check24HoursPassed()) {
-          showWorkoutReminderNotification();
-        } else {
-          // Schedule next reminder
-          scheduleNextReminder();
+        // Check if the stored next reminder timestamp has passed
+        const nextReminderTimestamp = localStorage.getItem('next-reminder-timestamp');
+        if (nextReminderTimestamp && parseInt(nextReminderTimestamp, 10) <= Date.now()) {
+          console.log("Stored reminder timestamp has passed, checking if workout reminder needed");
+          if (check24HoursPassed()) {
+            showWorkoutReminderNotification();
+          }
         }
+
+        // Always check if we need to remind about workout (as a fallback)
+        else if (check24HoursPassed()) {
+          console.log("24 hours have passed since last workout, showing reminder");
+          showWorkoutReminderNotification();
+        }
+
+        // Schedule next reminder in all cases
+        scheduleNextReminder();
       }
     }
 
