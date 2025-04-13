@@ -1,10 +1,13 @@
 import { trackEvent } from "~/utils/trackEvent";
 import { useState, useEffect } from "react";
 import { useTheme } from "../context/ThemeContext";
+import { useLocation } from "react-router";
 
 export default function Notifications() {
 	const { theme } = useTheme();
 	const [permissionStatus, setPermissionStatus] = useState<NotificationPermission | null>(null);
+	const location = useLocation(); // Get current route location
+	const isWorkoutRoute = location.pathname === "/workout";
 
   // Function to create and show a welcome notification
   const showWelcomeNotification = () => {
@@ -45,11 +48,9 @@ export default function Notifications() {
         body: "It's been 24 hours since your last exercise. Ready for another Desktop Athlete workout?",
         icon: "/favicon.ico",
         badge: "/favicon.ico",
-        tag: "workout-reminder",
-        actions: [
-          { action: 'workout', title: 'Start Workout' }
-        ]
-      } as NotificationOptions);
+        tag: "workout-reminder"
+        // Removed the actions property as it's not supported in regular Notifications
+      });
 
       // Track reminder notification
       trackEvent("notification_displayed", {
@@ -192,25 +193,25 @@ export default function Notifications() {
   };
 
   return (
-    <div className="mt-4 flex justify-center">
-      {permissionStatus !== "granted" && (
-        <button
-          onClick={requestNotificationPermission}
-          className={`
-			mt-4 text-center px-4 py-2 border-4
-			border-[${theme.primary}]
-			bg-[${theme.primary}]
-			text-[${theme.secondary}]
-			font-bold shadow-[4px_4px_0px_0px]
-			shadow-[${theme.secondary}]
-			cursor-pointer
-			hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px]
-			active:translate-x-[4px] active:translate-y-[4px] active:shadow-none
-			transition-all
-			`}
-        >
-          Enable Workout Reminders
-        </button>
+    <div className="flex justify-center mt-4 mb-4">
+      {permissionStatus !== "granted" && isWorkoutRoute && (
+					<button
+					onClick={requestNotificationPermission}
+					className={`
+						text-center px-4 py-2 border-4
+						border-[${theme.primary}]
+						bg-[${theme.primary}]
+						text-[${theme.secondary}]
+						font-bold shadow-[4px_4px_0px_0px]
+						shadow-[${theme.secondary}]
+						cursor-pointer
+						hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px]
+						active:translate-x-[4px] active:translate-y-[4px] active:shadow-none
+						transition-all
+					`}
+				>
+					Enable Workout Reminders
+				</button>
       )}
     </div>
   );

@@ -11,6 +11,7 @@ import { useTheme } from "../context/ThemeContext";
 import "./Layout.css";
 import { DefaultMeta } from "~/components/DefaultMeta";
 import GoogleAnalytics from "./GoogleAnalytics";
+import Notifications from "./Notifications"; // Import the Notifications component
 
 export function Layout() {
 	const { isDarkMode, theme } = useTheme();
@@ -36,6 +37,7 @@ export function Layout() {
 				</div>
 				<div className="relative z-10">
 					<Outlet />
+					<Notifications /> {/* Add the Notifications component */}
 				</div>
 			</main>
 			<Footer />
