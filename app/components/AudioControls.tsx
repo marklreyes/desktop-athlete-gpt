@@ -25,6 +25,7 @@ export function AudioControls({
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioElementCreated = useRef(false);
   const [isExpanded, setIsExpanded] = useState(false);
 
   // Position styles mapping
@@ -36,51 +37,64 @@ export function AudioControls({
   };
 
   useEffect(() => {
-    // Create the audio element
-    const audio = new Audio(audioSrc);
-    audio.volume = defaultVolume;
-    audioRef.current = audio;
+    // Only create the audio element once
+    if (!audioElementCreated.current) {
+      const audio = new Audio(audioSrc);
+      audio.volume = defaultVolume;
+      audioRef.current = audio;
+      audioElementCreated.current = true;
 
-    // Set up loop handling
-    const handleAudioEnd = () => {
-      if (loop && audioRef.current) {
-        audioRef.current.currentTime = 0;
-        audioRef.current.play().catch(error => {
-          console.error("Error replaying audio:", error);
-        });
-      } else {
-        setIsPlaying(false);
-      }
-    };
-
-    audio.addEventListener('ended', handleAudioEnd);
-
-    // Set up autoplay with delay if enabled
-    let audioTimer: NodeJS.Timeout | null = null;
-    if (autoPlay) {
-      audioTimer = setTimeout(() => {
-        try {
-          audio.play()
-            .then(() => setIsPlaying(true))
-            .catch(error => {
-              console.error("Error auto-playing audio:", error);
-            });
-        } catch (error) {
-          console.error("Error auto-playing audio:", error);
+      // Set up loop handling
+      const handleAudioEnd = () => {
+        if (loop && audioRef.current) {
+          audioRef.current.currentTime = 0;
+          audioRef.current.play().catch(error => {
+            console.error("Error replaying audio:", error);
+          });
+        } else {
+          setIsPlaying(false);
         }
-      }, autoPlayDelay);
-    }
+      };
 
-    // Clean up function
+      audio.addEventListener('ended', handleAudioEnd);
+
+      // Set up autoplay with delay if enabled
+      let audioTimer: NodeJS.Timeout | null = null;
+      if (autoPlay) {
+        audioTimer = setTimeout(() => {
+          try {
+            audio.play()
+              .then(() => setIsPlaying(true))
+              .catch(error => {
+                console.error("Error auto-playing audio:", error);
+              });
+          } catch (error) {
+            console.error("Error auto-playing audio:", error);
+          }
+        }, autoPlayDelay);
+      }
+
+      // Clean up function
+      return () => {
+        clearTimeout(audioTimer as NodeJS.Timeout);
+        if (audioRef.current) {
+          audioRef.current.removeEventListener('ended', handleAudioEnd);
+          audioRef.current.pause();
+        }
+      };
+    }
+  }, [audioSrc, loop, autoPlay, autoPlayDelay, defaultVolume]);
+
+  // Cleanup when component unmounts
+  useEffect(() => {
     return () => {
-      clearTimeout(audioTimer as NodeJS.Timeout);
       if (audioRef.current) {
-        audioRef.current.removeEventListener('ended', handleAudioEnd);
         audioRef.current.pause();
-        audioRef.current.currentTime = 0;
+        audioRef.current = null;
+        audioElementCreated.current = false;
       }
     };
-  }, [audioSrc, loop, autoPlay, autoPlayDelay, defaultVolume]);
+  }, []);
 
   const toggleAudio = () => {
     if (audioRef.current) {
@@ -121,9 +135,17 @@ export function AudioControls({
 
   const toggleMute = () => {
     if (audioRef.current) {
+      // Just toggle the muted state without affecting playback
       const newMutedState = !isMuted;
       audioRef.current.muted = newMutedState;
       setIsMuted(newMutedState);
+
+      // If audio is paused and we're unmuting, start playing
+      if (audioRef.current.paused && !newMutedState) {
+        audioRef.current.play()
+          .then(() => setIsPlaying(true))
+          .catch(err => console.error("Error playing audio:", err));
+      }
 
       // Call the callback when user interacts
       if (onUserInteraction) onUserInteraction();
