@@ -2,7 +2,21 @@ import YouTube from "react-youtube";
 import { useTheme } from "../context/ThemeContext";
 import { trackEvent } from "../utils/trackEvent";
 
-export function VideoPlayer({ videoUrl, title, onVideoEnd }: { videoUrl: string; title: string, onVideoEnd?: () => void;  }) {
+export function VideoPlayer({
+  videoUrl,
+  title,
+  onVideoEnd,
+  onPlayerReady,
+  onPlay,
+  onPause
+}: {
+  videoUrl: string;
+  title: string;
+  onVideoEnd?: () => void;
+  onPlayerReady?: (event: any) => void;
+  onPlay?: () => void;
+  onPause?: () => void;
+}) {
 	const { theme } = useTheme();
 
 	// Extract video ID from URL
@@ -38,6 +52,12 @@ export function VideoPlayer({ videoUrl, title, onVideoEnd }: { videoUrl: string;
 				origin: window.location.origin  // Security feature
 			}
 		  }}
+		  onReady={(event) => {
+			// Call the parent's onPlayerReady if provided
+			if (onPlayerReady) {
+				onPlayerReady(event);
+			}
+		  }}
 		  onEnd={() => {
 			// Dispatch workout completed event
 			window.dispatchEvent(new Event('workout-completed'));
@@ -56,11 +76,16 @@ export function VideoPlayer({ videoUrl, title, onVideoEnd }: { videoUrl: string;
 		  onPause={() => {
 			trackEvent("video_pause", {
 			  params: {
-
 				video_title: title,
 				video_url: videoUrl
 			  }
+
 			})();
+
+			// Call parent's onPause if provided
+			if (onPause) {
+				onPause();
+			}
 		}}
 		  onPlay={() => {
 			trackEvent("video_play", {
@@ -69,6 +94,21 @@ export function VideoPlayer({ videoUrl, title, onVideoEnd }: { videoUrl: string;
 				video_url: videoUrl
 			  }
 			})();
+
+			// Call parent's onPlay if provided
+			if (onPlay) {
+				onPlay();
+			}
+		  }}
+		  onStateChange={(event) => {
+			// YouTube player states: -1 (unstarted), 0 (ended), 1 (playing), 2 (paused), 3 (buffering), 5 (video cued)
+			// We can use this to trigger additional logic when the player state changes
+			const playerState = event.data;
+
+			// Dispatch custom event to notify parent component of state change
+			window.dispatchEvent(new CustomEvent('youtube-state-change', {
+				detail: { playerState, player: event.target }
+			}));
 		  }}
 		/>
 	  </div>
