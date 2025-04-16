@@ -3,7 +3,7 @@ import { useTheme } from "../context/ThemeContext";
 import { Link, useLocation } from "react-router-dom";
 import { trackEvent } from "../utils/trackEvent";
 import { VideoPlayer } from "../components/VideoPlayer";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Confetti from "react-confetti";
 import { Toast } from "../components/Toast";
 
@@ -16,9 +16,9 @@ export function meta({}: Route.MetaArgs) {
 	  { property: "og:type", content: "website" },
 	  { property: "og:url", content: "https://www.desktopathlete.com/workout" },
 	];
-  }
+}
 
-  export default function Workout() {
+export default function Workout() {
 	const { theme } = useTheme();
 	const location = useLocation();
 	const [showToast, setShowToast] = useState(true);
@@ -30,10 +30,134 @@ export function meta({}: Route.MetaArgs) {
 	// Add state to track if video has finished playing
 	const [videoCompleted, setVideoCompleted] = useState(false);
 
+	// Add state for video duration and current time
+	const [videoDuration, setVideoDuration] = useState<number>(0);
+	const [currentTime, setCurrentTime] = useState<number>(0);
+	const [timeRemaining, setTimeRemaining] = useState<string>("--:--");
+
+	// Reference to the YouTube player instance
+	const playerRef = useRef<any>(null);
+
+	// Interval reference for countdown timer
+	const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+	// Original document title (to restore later)
+	const originalTitleRef = useRef<string>(document.title);
+
+	// Format time remaining in MM:SS format
+	const formatTimeRemaining = (seconds: number): string => {
+		if (seconds <= 0 || !seconds) return "00:00";
+		const minutes = Math.floor(seconds / 60);
+		const remainingSeconds = Math.floor(seconds % 60);
+		return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+	};
+
+	// Update time remaining and document title
+	const updateTimeRemaining = () => {
+		if (playerRef.current && typeof playerRef.current.getCurrentTime === 'function') {
+			try {
+				const currentTimeValue = playerRef.current.getCurrentTime();
+				setCurrentTime(currentTimeValue);
+
+				// Only calculate remaining time if we have both values
+				if (videoDuration > 0 && currentTimeValue >= 0) {
+					const remaining = Math.max(0, videoDuration - currentTimeValue);
+					const formattedTime = formatTimeRemaining(remaining);
+					setTimeRemaining(formattedTime);
+
+					// Update document title with remaining time
+					document.title = `⏱️ ${formattedTime} | ${title}`;
+				}
+			} catch (error) {
+				console.error("Error updating time remaining:", error);
+			}
+		}
+	};
+
+	// Handle video play event
+	const handlePlay = () => {
+		console.log("Video is playing, starting timer updates");
+
+		// Clear any existing interval first
+		if (timerRef.current) {
+			clearInterval(timerRef.current);
+		}
+
+		// Start a new interval for updates when the video is playing
+		timerRef.current = setInterval(updateTimeRemaining, 1000);
+
+		// Update immediately when play starts
+		updateTimeRemaining();
+	};
+
+	// Handle video pause event
+	const handlePause = () => {
+		console.log("Video is paused, stopping timer updates");
+
+		// Stop the interval when paused
+		if (timerRef.current) {
+			clearInterval(timerRef.current);
+			timerRef.current = null;
+		}
+
+		// Do one final update to ensure the title is accurate
+		updateTimeRemaining();
+	};
+
+	// Setup player reference and start countdown timer
+	const handlePlayerReady = (event: any) => {
+		playerRef.current = event.target;
+
+		// Save original document title if not already saved
+		if (!originalTitleRef.current) {
+			originalTitleRef.current = document.title;
+		}
+
+		// Get video duration when player is ready
+		if (playerRef.current && typeof playerRef.current.getDuration === 'function') {
+			const duration = playerRef.current.getDuration();
+			setVideoDuration(duration);
+			const formattedTime = formatTimeRemaining(duration);
+			setTimeRemaining(formattedTime);
+
+			// Set initial title with duration
+			document.title = `⏱️ ${formattedTime} | ${title}`;
+		}
+
+		// Clear any existing interval
+		if (timerRef.current) {
+			clearInterval(timerRef.current);
+		}
+
+		// Start interval to update time remaining
+		timerRef.current = setInterval(updateTimeRemaining, 1000);
+
+		// Track event when player is ready
+		trackEvent("video_ready", {
+			params: {
+				action: "Ready",
+				event_category: "Workout",
+				event_label: title,
+				video_url: videoUrl
+			}
+		})();
+	};
+
 	// Handle video completion
 	const handleVideoEnd = () => {
 		console.log("Video playback completed!");
 		setVideoCompleted(true);
+
+		// Clear interval when video ends
+		if (timerRef.current) {
+			clearInterval(timerRef.current);
+			timerRef.current = null;
+		}
+
+		setTimeRemaining("00:00");
+
+		// Update title to show completion
+		document.title = `✅ Completed | ${title}`;
 
 		// Optional: Track completion event
 		trackEvent("workout_completed", {
@@ -45,6 +169,28 @@ export function meta({}: Route.MetaArgs) {
 			}
 		})();
 	};
+
+	// Clean up interval and restore title on component unmount
+	useEffect(() => {
+		return () => {
+			if (timerRef.current) {
+				clearInterval(timerRef.current);
+				timerRef.current = null;
+			}
+
+			// Restore original document title when leaving the page
+			if (originalTitleRef.current) {
+				document.title = originalTitleRef.current;
+			}
+		};
+	}, []);
+
+	// Update title when video title changes
+	useEffect(() => {
+		if (title && timeRemaining) {
+			document.title = `⏱️ ${timeRemaining} | ${title}`;
+		}
+	}, [title]);
 
 	useEffect(() => {
 		// First try to get values from location state (on initial navigation)
@@ -122,6 +268,9 @@ export function meta({}: Route.MetaArgs) {
 					videoUrl={videoUrl}
 					title={title}
 					onVideoEnd={handleVideoEnd}
+					onPlayerReady={handlePlayerReady}
+					onPlay={handlePlay}
+					onPause={handlePause}
 				/>
 				<Link to="/chat"
 					onClick={() => {
