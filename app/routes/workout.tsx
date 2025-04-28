@@ -6,6 +6,7 @@ import { VideoPlayer } from "../components/VideoPlayer";
 import { useEffect, useState, useRef } from "react";
 import Confetti from "react-confetti";
 import { Toast } from "../components/Toast";
+import { AudioControls } from "../components/AudioControls";
 
 export function meta({}: Route.MetaArgs) {
 	return [
@@ -236,7 +237,19 @@ export default function Workout() {
 			aria-label="Workout of the Day"
 			aria-live="polite"
 			aria-busy={videoCompleted ? "false" : "true"}
-		>
+			>
+			{/* Play victory sound when workout is completed */}
+			{videoCompleted && (
+				<div className="sr-only" aria-hidden="true">
+					<AudioControls
+						audioSrc="/8bit-music-winner-ni-sound-1-00-09.mp3"
+						autoPlay={true}
+						loop={false}
+						defaultVolume={0.1}
+					/>
+				</div>
+			)}
+
 			{/* Show a celebration message when completed */}
 			{videoCompleted && (
 				<Toast
