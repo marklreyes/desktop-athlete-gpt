@@ -238,41 +238,37 @@ export default function Workout() {
 			aria-live="polite"
 			aria-busy={videoCompleted ? "false" : "true"}
 			>
-			{/* Play victory sound when workout is completed */}
+			{/* videoCompleted: Play victory sound, show a celebration message, show confetti */}
 			{videoCompleted && (
-				<div className="sr-only" aria-hidden="true">
-					<AudioControls
-						audioSrc="/8bit-music-winner-ni-sound-1-00-09.mp3"
-						autoPlay={true}
-						loop={false}
-						defaultVolume={0.1}
+				<>
+					<div className="sr-only" aria-hidden="true">
+						<AudioControls
+							audioSrc="/8bit-music-winner-ni-sound-1-00-09.mp3"
+							autoPlay={true}
+							loop={false}
+							defaultVolume={0.1}
+						/>
+					</div>
+					<Toast
+						role="status"
+						aria-live="polite"
+						showToast={showToast}
+						setShowToast={setShowToast}
+						message="🏆 Workout complete! Great job!"
 					/>
-				</div>
+					<div className="fixed inset-0 flex items-center justify-center pointer-events-none z-50">
+						<Confetti
+							width={Math.min(window.innerWidth)} // Limit width to create more centered effect
+							height={window.innerHeight} // Use 80% of window height
+							recycle={false}
+							numberOfPieces={5000}
+							colors={['#f39416', '#01F1FC', '#331C40', '#B4D0D1']} // Match your theme colors
+							gravity={0.3} // Slower fall for better visibility
+						/>
+					</div>
+				</>
 			)}
 
-			{/* Show a celebration message when completed */}
-			{videoCompleted && (
-				<Toast
-					role="status"
-					aria-live="polite"
-					showToast={showToast}
-					setShowToast={setShowToast}
-					message="🏆 Workout complete! Great job!"
-				/>
-			)}
-      		{/* Only show confetti when video is completed */}
-			{videoCompleted && (
-			<div className="fixed inset-0 flex items-center justify-center pointer-events-none z-50">
-				<Confetti
-					width={Math.min(window.innerWidth)} // Limit width to create more centered effect
-					height={window.innerHeight} // Use 80% of window height
-					recycle={false}
-					numberOfPieces={5000}
-					colors={['#f39416', '#01F1FC', '#331C40', '#B4D0D1']} // Match your theme colors
-					gravity={0.3} // Slower fall for better visibility
-				/>
-			</div>
-			)}
 			<div className="flex flex-col items-center justify-center text-center w-full max-w-5xl px-4">
 				<h1 className="text-3xl font-bold mb-4">{title}</h1>
 				<p className="text-md mb-4">Presented by Desktop Athlete</p>
