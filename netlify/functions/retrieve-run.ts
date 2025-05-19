@@ -28,13 +28,32 @@ export const handler: Handler = async (event) => {
     console.error("Error retrieving run:", error);
 
     // Handle 404 error specifically
-    if (error.response?.status === 404) {
+    if (typeof error === 'object' && error !== null && 'response' in error &&
+        typeof error.response === 'object' && error.response !== null &&
+        'status' in error.response && error.response.status === 404) {
       return {
         statusCode: 404,
         body: JSON.stringify({ error: "No run found with the specified ID" }),
       };
     }
+		// Handle other API errors with type checking
+		if (typeof error === 'object' && error !== null) {
+			let errorMessage = "Failed to retrieve run";
 
+			// Try to extract error message
+			if ('message' in error && typeof error.message === 'string') {
+				errorMessage = error.message;
+			} else if ('error' in error &&
+								 typeof error.error === 'object' && error.error !== null &&
+								 'message' in error.error && typeof error.error.message === 'string') {
+				errorMessage = error.error.message;
+			}
+
+			return {
+				statusCode: 500,
+				body: JSON.stringify({ error: errorMessage }),
+			};
+		}
     return {
       statusCode: 500,
       body: JSON.stringify({ error: "Failed to retrieve run" }),
