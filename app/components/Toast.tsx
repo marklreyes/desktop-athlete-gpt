@@ -28,7 +28,7 @@ export function Toast({
 
   return (
 		<div
-			className="toast w-full max-w-xs md:max-w-md z-50"
+			className="toast toast-center toast-middle w-full max-w-xs md:max-w-md z-50"
 			role="alert"
 			aria-live="polite"
 		>

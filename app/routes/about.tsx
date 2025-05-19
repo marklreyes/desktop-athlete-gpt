@@ -66,9 +66,9 @@ export default function About() {
                 <p className="mb-3">
 									Described by past teammates as a <em>quick study</em>, I'm generally in the trenches of the presentation layer of your web experience. I also side quest on the mic & advocate for what's important.
                 </p>
-								<p>
-									I made this app to help busy people like you and me find workouts that fit into our daily grind. I believe that fitness should be accessible to everyone, and I hope this app helps you on your journey.
-								</p>
+				<p>
+					I made this app to help busy people like you and me find workouts that fit into our daily grind. I believe that fitness should be accessible to everyone, and I hope this app helps you on your journey.
+				</p>
               </div>
 
               {/* Social links with 8-bit icons */}
@@ -154,10 +154,10 @@ export default function About() {
 					This AI Assistant is designed to help people incorporate fitness into their busy lives. The suggestions were procured over a period of time by my wife (no days off), and is essentially a compiled list of YouTube workouts that I've done multiple times over and still continue to do so to this day. Add me on Strava for more details.
 				</p>
 				<p className="mb-3">
-                Combined with modern AI technology provided by OpenAI, my hope is to provide practical fitness programs that anyone can do, anytime, anywhere. As I discover more workouts that I feel are worthy of being added to the list, I will update the app. I also plan to add more features in the future, so stay tuned.
+                Built primarily in TypeScript through React Router v7, Tailwind, Netlify and modern AI services provided by OpenAI, my hope is to provide practical fitness programs that anyone can do, anytime, anywhere. As I discover more workouts that I feel are worthy of being added to the list, I will update the app. I also plan to add more features in the future, so stay tuned.
               </p>
 			  <p className="mb-3">
-			  I'd be grateful for any additional cups of coffee in order to support this platform!
+			  I'd be grateful for any additional cups of coffee in order to keep this platform up and running!
 			  </p>
 			  <div className="flex justify-center md:justify-start">
 				<a
@@ -192,24 +192,6 @@ export default function About() {
             </div>
           </div>
 
-          {/* Skills section */}
-          <div className="mb-12">
-            <h2 className={`text-2xl font-bold text-[${theme.secondary}] mb-4 uppercase tracking-wider inline-block border-b-4 border-[${theme.accent}]`}>
-              Skills & Tech
-            </h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-              {["TypeScript", "Netlify", "React Router", "Node.js", "Tailwind CSS", "OpenAI", "UX Design", "Fitness"].map((skill) => (
-                <div
-                  key={skill}
-                  className={`p-2 border-2 border-[${theme.accent}] bg-white text-black text-center
-                  shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)] hover:translate-y-1 transition-transform`}
-                >
-                  {skill}
-                </div>
-              ))}
-            </div>
-          </div>
-
           {/* Contact Section */}
           <div>
             <h2 className={`text-2xl font-bold text-[${theme.secondary}] mb-4 uppercase tracking-wider inline-block border-b-4 border-[${theme.accent}]`}>
@@ -217,10 +199,26 @@ export default function About() {
             </h2>
             <div className={`p-4 border-2 border-[${theme.accent}] bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)]`}>
               <p className="mb-3 text-black">
-                Have questions, suggestions, issues or just want to say hello?
+                Have questions, suggestions, issues or just want to say,
+				<a href="mailto:desktopathlete@gmail.com"
+								target="_blank"
+								onClick={trackEvent("social_click", {
+										params: {
+											action: "Click",
+											event_category: "Navigation",
+											event_label: "Email",
+											platform: "Email",
+											link_type: "profile",
+											component: "About Screen"
+										}
+									})}
+								title="Check out Mark L. Reyes on his website"
+								className={`text-center border-2 border-[${theme.accent}] p-2 bg-white hover:translate-y-1 transition-transform`}>
+                	  <span className="font-bold text-black">Hello</span>
+                </a>?
               </p>
               <p className="mb-3 text-black">
-                Reach out at: <span className="font-bold">mr@marklreyes.com</span>
+
               </p>
 
               <Link

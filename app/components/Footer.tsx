@@ -22,7 +22,12 @@ export default function Footer() {
 									},
 								});
 							}}
-							> Mark L. Reyes</Link>  | &copy; 2025 Desktop Athlete
+							> Mark L. Reyes</Link>
+						</small>
+					</p>
+					<p>
+						<small>
+							&copy; 2025 Desktop Athlete
 						</small>
 					</p>
 				</div>
