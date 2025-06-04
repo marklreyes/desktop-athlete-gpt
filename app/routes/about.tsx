@@ -2,6 +2,7 @@ import type { Route } from "./+types/home";
 import { useTheme } from "../context/ThemeContext";
 import { Link } from "react-router";
 import { trackEvent } from "~/utils/trackEvent";
+import { useState, useEffect } from "react";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -16,11 +17,67 @@ export function meta({}: Route.MetaArgs) {
 
 export default function About() {
   const { theme } = useTheme();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   // Calculate years of experience dynamically based on current year
   const startYear = 2007;
   const currentYear = new Date().getFullYear();
   const yearsOfExperience = currentYear - startYear;
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+
+        // Store form reference before async operations
+        const form = e.currentTarget;
+        const formData = new FormData(form);
+
+        try {
+            // Submit to our reliable custom Netlify function
+            const response = await fetch("/.netlify/functions/contact-simple", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams(formData as any).toString(),
+            });
+
+            const result = await response.json();
+
+            if (response.ok && result.success) {
+                // Reset form using stored reference
+                form.reset();
+
+                setIsSubmitted(true);
+                trackEvent('Contact Form', {
+					params: {
+						action: 'Submit',
+						event_category: 'Contact',
+						event_label: 'Form Submission Success',
+						platform: 'Web',
+						link_type: 'form',
+						component: 'About Screen'
+					}
+				});
+            } else {
+                throw new Error(result.error || 'Form submission failed');
+            }
+        } catch (error) {
+            console.error('Error submitting form:', error);
+            trackEvent('Contact Form', {
+				params: {
+						action: 'Submit',
+						event_category: 'Contact',
+						event_label: 'Form Submission Error',
+						platform: 'Web',
+						link_type: 'form',
+						component: 'About Screen'
+				}
+			});
+            alert('There was an error submitting the form. Please try again.');
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
 
   return (
     <div
@@ -66,9 +123,39 @@ export default function About() {
                 <p className="mb-3">
 									Described by past teammates as a <em>quick study</em>, I'm generally in the trenches of the presentation layer of your web experience. I also side quest on the mic & advocate for what's important.
                 </p>
-				<p>
+                <p className="mb-3">
 					I made this app to help busy people like you and me find workouts that fit into our daily grind. I believe that fitness should be accessible to everyone, and I hope this app helps you on your journey.
 				</p>
+				<Link
+					to="/chat"
+					onClick={() => {
+						// Track the button click event
+						trackEvent('try_desktop_athlete_now_button', {
+							params: {
+								action: "Click",
+								event_category: "Navigation",
+								event_label: "Try Desktop Athlete Now!",
+								component: "About Screen",
+							},
+							audioSrc: "/retro-8bit-music-logo-ni-sound-1-00-04.mp3",
+							audioVolume: 0.1,
+						});
+						const audio = new Audio('/retro-8bit-music-logo-ni-sound-1-00-04.mp3');
+						audio.volume = 0.1; // Set volume to 10% (adjust this value between 0-1)
+						audio.play();
+					}}
+					className={`block text-center px-4 py-2 border-4
+						border-[${theme.primary}]
+						bg-[${theme.primary}]
+						text-white
+						font-bold shadow-[4px_4px_0px_0px]
+						shadow-[${theme.secondary}]
+						hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px]
+						active:translate-x-[4px] active:translate-y-[4px] active:shadow-none
+						transition-all`}
+					>
+						Try Desktop Athlete Now!
+				</Link>
               </div>
 
               {/* Social links with 8-bit icons */}
@@ -198,59 +285,123 @@ export default function About() {
               Get In Touch
             </h2>
             <div className={`p-4 border-2 border-[${theme.accent}] bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)]`}>
-              <p className="mb-3 text-black">
-                Have questions, suggestions, issues or just want to say,
-				<a href="mailto:desktopathlete@gmail.com"
-								target="_blank"
-								onClick={trackEvent("social_click", {
-										params: {
-											action: "Click",
-											event_category: "Navigation",
-											event_label: "Email",
-											platform: "Email",
-											link_type: "profile",
-											component: "About Screen"
-										}
-									})}
-								title="Check out Mark L. Reyes on his website"
-								className={`text-center border-2 border-[${theme.accent}] p-2 bg-white hover:translate-y-1 transition-transform`}>
-                	  <span className="font-bold text-black">Hello</span>
-                </a>?
-              </p>
-              <p className="mb-3 text-black">
+              {/* Two-column layout: paragraph on left, form on right */}
+              <div className="flex flex-col lg:flex-row gap-6">
+                {/* Left column - paragraph */}
+                <div className="lg:w-1/2">
+                  <p className="mb-3 text-black">
+                    Have questions, suggestions, issues or just want to say, <em>hello</em>? Then fill out the form below and I'll get back to you as soon as I can.
+                  </p>
+                </div>
 
-              </p>
+                {/* Right column - contact form or success message */}
+                <div className="lg:w-1/2">
+                  {isSubmitted ? (
+                    // Success message UI
+                    <div className="space-y-4">
+                      <div className={`p-4 border-2 border-[${theme.accent}] bg-green-50 text-center`}>
+                        <h3 className="text-lg font-bold text-green-800 mb-2">
+                          Thank You! 🎉
+                        </h3>
+                        <p className="text-green-700 mb-3">
+                          Your message has been sent successfully! I'll get back to you as soon as I can.
+                        </p>
+                      </div>
 
-              <Link
-                to="/chat"
-				onClick={() => {
-					// Track the button click event
-					trackEvent('try_desktop_athlete_now_button', {
-						params: {
-							action: "Click",
-							event_category: "Navigation",
-							event_label: "Try Desktop Athlete Now!",
-							component: "About Screen",
-						},
-						audioSrc: "/retro-8bit-music-logo-ni-sound-1-00-04.mp3",
-						audioVolume: 0.1,
-					});
-					const audio = new Audio('/retro-8bit-music-logo-ni-sound-1-00-04.mp3');
-					audio.volume = 0.1; // Set volume to 10% (adjust this value between 0-1)
-					audio.play();
-				}}
-				className={`inline-block text-center px-4 py-2 border-4
-					border-[${theme.primary}]
-					bg-[${theme.primary}]
-					text-[${theme.secondary}]
-					font-bold shadow-[4px_4px_0px_0px]
-					shadow-[${theme.secondary}]
-					hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px]
-					active:translate-x-[4px] active:translate-y-[4px] active:shadow-none
-					transition-all`}
-				>
-					Try Desktop Athlete Now!
-              </Link>
+                      <button
+                        onClick={() => setIsSubmitted(false)}
+                        className={`block text-center px-4 py-2 border-4
+                          border-[${theme.primary}]
+                          bg-[${theme.primary}]
+                          text-[${theme.secondary}]
+                          font-bold shadow-[4px_4px_0px_0px]
+                          shadow-[${theme.secondary}]
+                          hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px]
+                          active:translate-x-[4px] active:translate-y-[4px] active:shadow-none
+                          transition-all`}
+                      >
+                        Send Another Message
+                      </button>
+                    </div>
+                  ) : (
+                    // Contact form UI
+					<form
+						name="contact"
+						method="POST"
+						onSubmit={handleSubmit}
+						className="space-y-4"
+					>
+					{/* Hidden field for Netlify */}
+					<input type="hidden" name="form-name" value="contact" />
+
+					{/* Honeypot field for spam protection */}
+					<div style={{ display: 'none' }}>
+						<label>
+							Don't fill this out if you're human:
+							<input name="bot-field" />
+						</label>
+					</div>
+                    <div>
+                      <label htmlFor="name" className="block text-sm font-bold text-black mb-1">
+                        Name
+                      </label>
+                      <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        className={`w-full px-3 py-2 border-2 border-[${theme.accent}] focus:outline-none focus:ring-2 focus:ring-[${theme.primary}] text-black`}
+                        placeholder="Your name"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="email" className="block text-sm font-bold text-black mb-1">
+                        Email
+                      </label>
+                      <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        className={`w-full px-3 py-2 border-2 border-[${theme.accent}] focus:outline-none focus:ring-2 focus:ring-[${theme.primary}] text-black`}
+                        placeholder="your.email@example.com"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="message" className="block text-sm font-bold text-black mb-1">
+                        Message
+                      </label>
+                      <textarea
+                        id="message"
+                        name="message"
+                        rows={4}
+                        className={`w-full px-3 py-2 border-2 border-[${theme.accent}] focus:outline-none focus:ring-2 focus:ring-[${theme.primary}] text-black resize-none`}
+                        placeholder="What's on your mind?"
+                        required
+                      />
+                    </div>
+
+                    <button
+                      type="submit"
+					  disabled={isSubmitting}
+                      className={`block text-center px-4 py-2 border-4
+                        border-[${theme.primary}]
+                        bg-[${theme.primary}]
+                        text-[${theme.secondary}]
+                        font-bold shadow-[4px_4px_0px_0px]
+                        shadow-[${theme.secondary}]
+                        hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px]
+                        active:translate-x-[4px] active:translate-y-[4px] active:shadow-none
+                        transition-all`}
+                    >
+                    	{isSubmitting ? 'Sending...' : 'Send Message'}
+                    </button>
+                  </form>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         </div>
