@@ -10,6 +10,9 @@ node_bundler = "esbuild"
 memory_size = 1024
 timeout = 30
 
+[functions.contact-simple]
+timeout = 10
+
 [dev]
 command = "react-router dev"
 functions = "netlify/functions"
@@ -19,5 +22,19 @@ port = 8888
 [[redirects]]
 from = "/functions/*"
 to = "/functions/:splat"
+status = 200
+force = true
+
+# Assets should be served statically
+[[redirects]]
+from = "/assets/*"
+to = "/assets/:splat"
+status = 200
+force = true
+
+# Serve the static contact.html file for Netlify Forms processing only
+[[redirects]]
+from = "/contact.html"
+to = "/contact.html"
 status = 200
 force = true
