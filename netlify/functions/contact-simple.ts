@@ -55,7 +55,7 @@ export const handler: Handler = async (event, context) => {
     console.log("Form data received:", Object.keys(formData));
 
     // Extract and validate form fields
-    const { name, email, subject, message, "bot-field": botField, "form-name": formName } = formData;
+    const { name, email, message, "bot-field": botField, "form-name": formName } = formData;
 
     // Check honeypot field for spam protection
     if (botField) {
@@ -71,15 +71,15 @@ export const handler: Handler = async (event, context) => {
     }
 
     // Validate required fields
-    if (!name || !email || !subject || !message) {
-      console.log("Missing required fields");
+    if (!name || !email || !message) {
+      console.log("Missing required fields:", { name: !!name, email: !!email, message: !!message });
       return {
         statusCode: 400,
         headers: {
           ...corsHeaders,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ error: "All fields are required" }),
+        body: JSON.stringify({ error: "Name, email, and message are required" }),
       };
     }
 
@@ -101,7 +101,6 @@ export const handler: Handler = async (event, context) => {
     const sanitizedData = {
       name: name.trim().replace(/[<>]/g, ''),
       email: email.trim().replace(/[<>]/g, ''),
-      subject: subject.trim().replace(/[<>]/g, ''),
       message: message.trim().replace(/[<>]/g, '')
     };
 
@@ -109,19 +108,17 @@ export const handler: Handler = async (event, context) => {
     console.log("Contact details:", {
       name: sanitizedData.name,
       email: sanitizedData.email,
-      subject: sanitizedData.subject,
       messageLength: sanitizedData.message.length
     });
 
     // Submit to Netlify Forms so it appears in the Netlify dashboard
-    const siteUrl = process.env.URL || event.headers.origin || 'https://allwebsd.com';
+    const siteUrl = process.env.URL || event.headers.origin || 'https://www.desktopathlete.com';
 
     // Prepare form data for Netlify Forms submission
     const netlifyFormData = new URLSearchParams({
       "form-name": "contact",
       name: sanitizedData.name,
       email: sanitizedData.email,
-      subject: sanitizedData.subject,
       message: sanitizedData.message
     });
 
