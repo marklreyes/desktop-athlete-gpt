@@ -20,11 +20,6 @@ export default function About() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  // Calculate years of experience dynamically based on current year
-  const startYear = 2007;
-  const currentYear = new Date().getFullYear();
-  const yearsOfExperience = currentYear - startYear;
-
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setIsSubmitting(true);
@@ -117,15 +112,15 @@ export default function About() {
                 Mark L. Reyes
               </h2>
               <div className={`mb-4 p-4 border-2 border-[${theme.accent}] bg-white text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)]`}>
-                <p className="mb-3">
-									Hi, I'm Mark, creator of Desktop Athlete. I'm a Frontend Engineer with {yearsOfExperience} years working with Engineering, Product, Creative & Marketing Teams.
+                <p className="mb-3 font-semibold">
+									Mark is a Front-End Engineer, Podcast Producer, and Advocate crafting dynamic web experiences and scalable UI systems.
                 </p>
                 <p className="mb-3">
-									Described by past teammates as a <em>quick study</em>, I'm generally in the trenches of the presentation layer of your web experience. I also side quest on the mic & advocate for what's important.
+									His journey began in web marketing, but his passion for design systems, JavaScript frameworks, and tech storytelling quickly evolved into a multifaceted career that spans development, digital strategy, and audio production. Today, he helps companies—from Fortune 500s to startups—deliver performant, accessible, and engaging digital products that align with real business goals.
                 </p>
                 <p className="mb-3">
-					I made this app to help busy people like you and me find workouts that fit into our daily grind. I believe that fitness should be accessible to everyone, and I hope this app helps you on your journey.
-				</p>
+									Mark developed this app to help busy individuals discover workouts that fit seamlessly into their daily routines. Driven by the belief that fitness should be accessible to all, he designed the experience to support users on their personal health journeys.
+								</p>
 				<Link
 					to="/chat"
 					onClick={() => {
@@ -234,18 +229,19 @@ export default function About() {
               About Desktop Athlete
             </h2>
             <div className={`p-4 border-2 border-[${theme.accent}] bg-white text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)]`}>
-              <p className="mb-3">
-                Desktop Athlete was created in the throes of a hardship we all shared, lockdown due to COVID-19. Since gyms, public parks and beaches were essentially off limits in my area, this portion of the <em>multiverse</em> came about as a way for me to keep sane during such difficult times. I held onto this idea even after <em>the blip</em> ended because I felt compelled to turn a negative into a positive.
-              </p>
-              <p className="mb-3">
-					This AI Assistant is designed to help people incorporate fitness into their busy lives. The suggestions were procured over a period of time by my wife (no days off), and is essentially a compiled list of YouTube workouts that I've done multiple times over and still continue to do so to this day. Add me on Strava for more details.
-				</p>
-				<p className="mb-3">
-                Built primarily in TypeScript through React Router v7, Tailwind, Netlify and modern AI services provided by OpenAI, my hope is to provide practical fitness programs that anyone can do, anytime, anywhere. As I discover more workouts that I feel are worthy of being added to the list, I will update the app. I also plan to add more features in the future, so stay tuned.
-              </p>
-			  <p className="mb-3">
-			  I'd be grateful for any additional cups of coffee in order to keep this platform up and running!
-			  </p>
+							<p className="mb-3">
+								<span className="font-semibold">Desktop Athlete</span> was created during the global COVID-19 lockdown—a challenging period that reshaped daily routines and limited access to gyms, parks, and other fitness spaces. What began as a personal solution for staying active and mentally grounded soon evolved into a lasting project, rooted in the desire to turn adversity into opportunity.
+							</p>
+							<p className="mb-3">
+								This AI-powered assistant curates a growing collection of accessible workout routines tailored for busy lifestyles. The recommendations—sourced over time by Mark’s wife, a dedicated fitness enthusiast—are based on YouTube workouts that Mark has personally tested and continues to use regularly. For additional insights and progress tracking, users can connect with him on Strava.
+							</p>
+							<p className="mb-3">
+								Developed primarily with TypeScript using React Router v7, Tailwind, Netlify, and OpenAI’s modern AI tools, the platform offers practical, flexible fitness solutions that anyone can integrate into their day. As new, high-quality workouts are discovered, the app will be updated accordingly. Additional features are also in development.
+							</p>
+							<p className="mb-3">
+								Support is always appreciated to help keep the project alive and growing.
+							</p>
+
 			  <div className="flex justify-center md:justify-start">
 				<a
 					href="https://www.buymeacoffee.com/markreyes"
