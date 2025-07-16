@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@netlify/functions": "^4.1.5",
-    "@react-router/node": "^7.6.1",
+    "@react-router/node": "^7.6.3",
     "@react-router/serve": "^7.6.0",
     "@tailwindcss/postcss": "^4.1.11",
     "@tailwindcss/vite": "^4.1.10",
