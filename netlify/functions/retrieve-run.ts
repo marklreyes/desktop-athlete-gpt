@@ -18,7 +18,7 @@ export const handler: Handler = async (event) => {
     }
 
     // Retrieve the run status from OpenAI
-    const response = await openai.beta.threads.runs.retrieve(threadId, runId);
+    const response = await openai.beta.threads.runs.retrieve(runId, {thread_id: threadId});
 
     return {
       statusCode: 200,
