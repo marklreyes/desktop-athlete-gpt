@@ -116,7 +116,7 @@ export default function About() {
 									Mark is a Front-End Engineer, Podcast Producer, and Advocate crafting dynamic web experiences and scalable UI systems.
                 </p>
                 <p className="mb-3">
-									His journey began in web marketing, but his passion for design systems, JavaScript frameworks, and tech storytelling quickly evolved into a multifaceted career that spans development, digital strategy, and audio production. Today, he helps companies—from Fortune 500s to startups—deliver performant, accessible, and engaging digital products that align with real business goals.
+									He started in web marketing, but his passion for design systems, JavaScript frameworks, and tech storytelling grew into a career spanning development, digital strategy, and audio production. Today, he helps companies—from Fortune 500s to startups—deliver performant, accessible digital products that align with real goals.
                 </p>
                 <p className="mb-3">
 									Mark developed this app to help busy individuals discover workouts that fit seamlessly into their daily routines. Driven by the belief that fitness should be accessible to all, he designed the experience to support users on their personal health journeys.
