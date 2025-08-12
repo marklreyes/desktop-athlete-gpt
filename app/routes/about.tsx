@@ -113,13 +113,13 @@ export default function About() {
               </h2>
               <div className={`mb-4 p-4 border-2 border-[${theme.accent}] bg-white text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)]`}>
                 <p className="mb-3 font-semibold">
-									Mark is a Front-End Engineer, Podcast Producer, and Advocate crafting dynamic web experiences and scalable UI systems.
+									I’m a Digital Technologist blending code, storytelling, and culture — building digital experiences that are performant, accessible, and human-centered.
                 </p>
                 <p className="mb-3">
-									He started in web marketing, but his passion for design systems, JavaScript frameworks, and tech storytelling grew into a career spanning development, digital strategy, and audio production. Today, he helps companies—from Fortune 500s to startups—deliver performant, accessible digital products that align with real goals.
+									With 16+ years in front-end engineering and digital strategy, I help companies — from Fortune 500 brands to high-growth startups — deliver products that align with real-world goals. My work spans modern stacks like React, Angular, and Astro, design systems, web performance, and developer education.
                 </p>
                 <p className="mb-3">
-									Mark developed this app to help busy individuals discover workouts that fit seamlessly into their daily routines. Driven by the belief that fitness should be accessible to all, he designed the experience to support users on their personal health journeys.
+									I developed this app to help busy individuals discover workouts that fit seamlessly into their daily routines. Driven by the belief that fitness should be accessible to all, I designed the experience to support users on their personal health journeys.
 								</p>
 				<Link
 					to="/chat"
