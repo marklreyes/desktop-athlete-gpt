@@ -11,7 +11,7 @@
   "dependencies": {
     "@netlify/functions": "^4.1.14",
     "@react-router/node": "^7.7.0",
-    "@react-router/serve": "^7.7.0",
+    "@react-router/serve": "^7.8.1",
     "@tailwindcss/postcss": "^4.1.11",
     "@tailwindcss/vite": "^4.1.10",
     "dompurify": "^3.2.4",
