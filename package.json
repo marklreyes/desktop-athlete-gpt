@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "@netlify/vite-plugin-react-router": "^1.0.0",
-    "@react-router/dev": "^7.7.0",
+    "@react-router/dev": "^7.9.3",
     "@types/node": "^24",
     "@types/node-fetch": "^2.6.12",
     "@types/react": "^19.1.8",
