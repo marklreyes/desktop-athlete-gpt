@@ -9,7 +9,7 @@
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
-    "@netlify/functions": "^4.1.14",
+    "@netlify/functions": "^5.1.0",
     "@react-router/node": "^7.9.5",
     "@react-router/serve": "^7.9.5",
     "@tailwindcss/postcss": "^4.1.11",
