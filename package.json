@@ -9,7 +9,7 @@
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
-    "@netlify/functions": "^4.1.14",
+    "@netlify/functions": "^5.1.0",
     "@react-router/node": "^7.9.5",
     "@react-router/serve": "^7.9.5",
     "@tailwindcss/postcss": "^4.1.11",
@@ -26,14 +26,14 @@
     "react-youtube": "^10.1.0"
   },
   "devDependencies": {
-    "@netlify/vite-plugin-react-router": "^1.0.0",
+    "@netlify/vite-plugin-react-router": "^2.1.2",
     "@react-router/dev": "^7.9.5",
     "@types/node": "^24",
     "@types/node-fetch": "^2.6.12",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "autoprefixer": "^10.4.21",
-    "daisyui": "^5.0.46",
+    "daisyui": "^5.5.8",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.2",
     "typescript": "^5.6.3",
