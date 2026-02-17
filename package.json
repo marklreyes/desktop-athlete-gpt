@@ -12,17 +12,17 @@
     "@netlify/functions": "^5.1.0",
     "@react-router/node": "^7.9.5",
     "@react-router/serve": "^7.9.5",
-    "@tailwindcss/postcss": "^4.1.11",
+    "@tailwindcss/postcss": "^4.1.18",
     "@tailwindcss/vite": "^4.1.10",
-    "dompurify": "^3.2.4",
+    "dompurify": "^3.3.1",
     "isbot": "^5.1.27",
-    "openai": "^5.10.2",
+    "openai": "^6.15.0",
     "react": "^19.2.1",
     "react-confetti": "^6.4.0",
     "react-dom": "^19.2.1",
     "react-markdown": "^10.0.0",
     "react-router": "^7.12.0",
-    "react-router-dom": "^7.9.5",
+    "react-router-dom": "^7.11.0",
     "react-youtube": "^10.1.0"
   },
   "devDependencies": {
@@ -37,7 +37,7 @@
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.2",
     "typescript": "^5.6.3",
-    "vite": "^7.1.12",
+    "vite": "^7.3.0",
     "vite-tsconfig-paths": "^5.1.2"
   }
 }
