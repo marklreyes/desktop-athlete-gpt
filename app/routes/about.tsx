@@ -116,7 +116,7 @@ export default function About() {
 									I’m a Digital Technologist blending code, storytelling, and culture — building digital experiences that are performant, accessible, and human-centered.
                 </p>
                 <p className="mb-3">
-									With 16+ years in front-end engineering and digital strategy, I help companies — from Fortune 500 brands to high-growth startups — deliver products that align with real-world goals. My work spans modern stacks like React, Angular, and Astro, design systems, web performance, and developer education.
+									I didn't start out as an engineer. My early years were in paid search and web content — figuring out what made people click, convert, and come back. That curiosity eventually pulled me deeper into the code behind those experiences, and I've been building at that intersection ever since. It's a background that comes in handy when the work requires more than just shipping features.
                 </p>
                 <p className="mb-3">
 									I developed this app to help busy individuals discover workouts that fit seamlessly into their daily routines. Driven by the belief that fitness should be accessible to all, I designed the experience to support users on their personal health journeys.
