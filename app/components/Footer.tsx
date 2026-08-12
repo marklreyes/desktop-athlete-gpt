@@ -27,7 +27,7 @@ export default function Footer() {
 					</p>
 					<p>
 						<small>
-							&copy; 2025 Desktop Athlete
+							&copy; {new Date().getFullYear()} Desktop Athlete
 						</small>
 					</p>
 				</div>
